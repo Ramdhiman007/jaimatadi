@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Technical Help Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .auth-container {
+      max-width: 400px;
+      margin: 4rem auto;
+    }
+
+    .auth-toggle {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .auth-toggle button {
+      flex: 1;
+      padding: 0.75rem 0;
+      border: 1px solid var(--border-light, #e2e8f0);
+      background: var(--bg-surface-alt, #f8fafc);
+      color: var(--text-muted, #475569);
+      border-radius: var(--radius-md, 0.5rem);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .auth-toggle button.active {
+      background: var(--brand-primary, #4f46e5);
+      color: #ffffff;
+      border-color: var(--brand-primary, #4f46e5);
+      box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+    }
+
+    .auth-toggle button:hover:not(.active) {
+      background: #e2e8f0;
+      color: var(--text-main, #0f172a);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="assets/img/logo.svg" alt="" width="32" height="32">
+        <span>Technical Help Hub</span>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="problems.html">Problems</a>
+        <a href="mobile-problems.html">Mobile</a>
+        <a href="faq.html">FAQs</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html" class="btn btn-sm" aria-current="page">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="auth-container">
+      <div class="card">
+        <div class="auth-toggle">
+          <button id="tabLogin" class="active">Login</button>
+          <button id="tabRegister">Sign Up</button>
+        </div>
+
+        <form id="formLogin">
+          <h2 class="text-center" style="margin-bottom: 1.5rem;">Welcome Back</h2>
+
+          <div class="form-group">
+            <label for="l_email">Email Address</label>
+            <input id="l_email" type="email" required placeholder="you@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="l_password">Password</label>
+            <input id="l_password" type="password" required placeholder="••••••••">
+          </div>
+
+          <button class="btn btn-block" type="submit">Login</button>
+          <div id="loginAlert" class="alert err mt-4" style="display:none"></div>
+        </form>
+
+        <form id="formRegister" style="display:none">
+          <h2 class="text-center" style="margin-bottom: 1.5rem;">Create Account</h2>
+
+          <div class="form-group">
+            <label for="r_name">Full Name</label>
+            <input id="r_name" type="text" required placeholder="John Doe">
+          </div>
+
+          <div class="form-group">
+            <label for="r_email">Email Address</label>
+            <input id="r_email" type="email" required placeholder="you@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="r_password">Password</label>
+            <input id="r_password" type="password" required placeholder="Create a password">
+          </div>
+
+          <button class="btn btn-block" type="submit">Sign Up</button>
+          <div id="regAlert" class="alert err mt-4" style="display:none"></div>
+        </form>
+
+        <p class="muted text-center mt-4">
+          <small>This is a demo. Credentials are stored in your browser's LocalStorage.</small>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Technical Help Hub</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if already logged in
+      if (Auth.getUser()) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const tabLogin = document.getElementById('tabLogin');
+      const tabRegister = document.getElementById('tabRegister');
+      const formLogin = document.getElementById('formLogin');
+      const formRegister = document.getElementById('formRegister');
+
+      // Toggle Logic
+      tabLogin.addEventListener('click', () => {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        formLogin.style.display = 'block';
+        formRegister.style.display = 'none';
+      });
+
+      tabRegister.addEventListener('click', () => {
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+        formRegister.style.display = 'block';
+        formLogin.style.display = 'none';
+      });
+
+      // Login Handler
+      formLogin.addEventListener('submit', e => {
+        e.preventDefault();
+        const email = document.getElementById('l_email').value.trim();
+        const pass = document.getElementById('l_password').value;
+
+        const result = Auth.login(email, pass);
+        const alert = document.getElementById('loginAlert');
+
+        if (result.success) {
+          alert.className = 'alert ok mt-4';
+          alert.textContent = 'Login successful! Redirecting...';
+          alert.style.display = 'block';
+          setTimeout(() => window.location.href = 'index.html', 1000);
+        } else {
+          alert.className = 'alert err mt-4';
+          alert.textContent = result.message;
+          alert.style.display = 'block';
+        }
+      });
+
+      // Register Handler
+      formRegister.addEventListener('submit', e => {
+        e.preventDefault();
+        const name = document.getElementById('r_name').value.trim();
+        const email = document.getElementById('r_email').value.trim();
+        const pass = document.getElementById('r_password').value;
+
+        const result = Auth.register(name, email, pass);
+        const alert = document.getElementById('regAlert');
+
+        if (result.success) {
+          alert.className = 'alert ok mt-4';
+          alert.textContent = 'Account created! Redirecting...';
+          alert.style.display = 'block';
+          setTimeout(() => window.location.href = 'index.html', 1000);
+        } else {
+          alert.className = 'alert err mt-4';
+          alert.textContent = result.message;
+          alert.style.display = 'block';
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

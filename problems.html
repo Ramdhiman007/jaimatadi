@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Problems - Technical Help Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="assets/img/logo.svg" alt="" width="32" height="32">
+        <span>Technical Help Hub</span>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="problems.html" aria-current="page">Problems</a>
+        <a href="mobile-problems.html">Mobile</a>
+        <a href="faq.html">FAQs</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+        <a href="qa-testing.html">Testing Q&A</a>
+        <a href="login.html" class="btn btn-sm">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="list-header" style="flex-direction: column; align-items: stretch; gap: 1rem;">
+      <h1>Common Computer Problems</h1>
+      <p class="muted">Filter by category or OS to find the solution you need.</p>
+
+      <div
+        style="background: var(--bg-surface); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+        <form class="search search-grid" id="searchForm">
+          <div class="search-wrapper">
+            <input type="search" id="searchInput" placeholder="Search problems (e.g. slow wifi)..."
+              aria-label="Search problems">
+            <button type="submit" class="search-btn-inner">Search</button>
+          </div>
+
+          <div class="select-wrapper">
+            <select id="category" aria-label="Category">
+              <option value="">All Categories</option>
+              <option value="performance">Performance</option>
+              <option value="virus">Virus/Malware</option>
+              <option value="hardware">Hardware</option>
+              <option value="software">Software</option>
+              <option value="network">Network</option>
+              <option value="data">Data Recovery</option>
+            </select>
+          </div>
+
+          <div class="select-wrapper">
+            <select id="os" aria-label="OS">
+              <option value="">All OS</option>
+              <option>Windows</option>
+              <option>macOS</option>
+              <option>Linux</option>
+            </select>
+          </div>
+
+          <div class="select-wrapper">
+            <select id="difficulty" aria-label="Difficulty">
+              <option value="">All Difficulty</option>
+              <option>Easy</option>
+              <option>Medium</option>
+              <option>Hard</option>
+            </select>
+          </div>
+
+          <button class="btn" type="submit">Filter Results</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="results" class="grid"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Technical Help Hub</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/problems-db.js"></script>
+  <script>
+    // Load from global problemsDB
+    const allProblems = Object.entries(problemsDB).map(([id, data]) => ({ id, ...data }));
+
+    // Filter for PC (Windows, Linux, macOS)
+    const problems = allProblems.filter(p => p.os.some(os => ['Windows', 'Linux', 'macOS'].includes(os)));
+
+
+    function render(list) {
+      const wrap = document.getElementById('results');
+      if (!list.length) {
+        wrap.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem;" class="muted">No problems found matching your filters.</div>';
+        return;
+      }
+      wrap.innerHTML = list.map(p => `
+    <a class="card card-${p.category}" href="problem.html?id=${p.id}">
+      <div style="margin-bottom:auto">
+        <h3>${p.title}</h3>
+        <p>${p.summary}</p>
+      </div>
+      <div class="meta mt-4">
+        <span class="badge badge-${p.category}">${p.category}</span>
+        <span class="badge ${getDifficultyClass(p.difficulty)}">${p.difficulty}</span>
+      </div>
+    </a>
+  `).join('');
+    }
+
+    function getDifficultyClass(d) {
+      if (d === 'Easy') return 'badge-success';
+      if (d === 'Medium') return 'badge-warning';
+      return 'badge-danger';
+    }
+
+    function applyFilters() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const category = document.getElementById('category').value;
+      const os = document.getElementById('os').value;
+      const difficulty = document.getElementById('difficulty').value;
+
+      const filtered = problems.filter(p => {
+        const qok = !q || p.title.toLowerCase().includes(q) || p.summary.toLowerCase().includes(q);
+        const cok = !category || p.category === category;
+        const ook = !os || p.os.includes(os);
+        const dok = !difficulty || p.difficulty === difficulty;
+        return qok && cok && ook && dok;
+      });
+      render(filtered);
+    }
+
+    document.getElementById('searchForm').addEventListener('submit', e => { e.preventDefault(); applyFilters(); });
+    ['category', 'os', 'difficulty'].forEach(id => document.getElementById(id).addEventListener('change', applyFilters));
+
+    // Initial Render
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('category')) {
+      document.getElementById('category').value = params.get('category');
+      applyFilters();
+    } else if (params.get('q')) {
+      document.getElementById('searchInput').value = params.get('q');
+      applyFilters();
+    } else {
+      render(problems);
+    }
+  </script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+
+</html>

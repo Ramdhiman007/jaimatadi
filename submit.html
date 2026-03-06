@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Submit a Problem - Technical Help Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="assets/img/logo.svg" alt="" width="32" height="32">
+        <span>Technical Help Hub</span>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="problems.html">Problems</a>
+        <a href="mobile-problems.html">Mobile</a>
+        <a href="faq.html">FAQs</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html" class="btn btn-sm">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div style="max-width: 600px; margin: 0 auto;">
+      <div class="text-center" style="margin-bottom: 2rem;">
+        <h1>Submit a Problem</h1>
+        <p class="muted">Help the community by sharing a problem you encountered and how you fixed it.</p>
+      </div>
+
+      <div class="card">
+        <form id="submitForm">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" required placeholder="Jane Doe">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required placeholder="jane@example.com">
+          </div>
+
+          <div class="form-group">
+            <div class="row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div>
+                <label for="os">Operating System</label>
+                <select id="os" required>
+                  <option value="" disabled selected>Select OS</option>
+                  <option>Windows</option>
+                  <option>macOS</option>
+                  <option>Linux</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="category">Category</label>
+                <select id="category" required>
+                  <option value="" disabled selected>Select Category</option>
+                  <option value="performance">Performance</option>
+                  <option value="virus">Virus/Malware</option>
+                  <option value="hardware">Hardware</option>
+                  <option value="software">Software</option>
+                  <option value="network">Network</option>
+                  <option value="data">Data Recovery</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="probTitle">Problem Title</label>
+            <input type="text" id="probTitle" required placeholder="e.g. Printer not recognized on Windows 11">
+          </div>
+
+          <div class="form-group">
+            <label for="desc">Description & Solution steps</label>
+            <textarea id="desc" rows="6" required
+              placeholder="Describe the symptoms and the steps you took to fix it..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Verification</label>
+            <div id="captcha" class="captcha"
+              style="background: var(--bg-surface-alt); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-block">Submit Problem</button>
+          <div id="msg" class="alert ok mt-4" style="display:none"></div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Technical Help Hub</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // If logged in, pre-fill
+      const user = Auth.getUser();
+      if (user) {
+        document.getElementById('name').value = user.name || '';
+        document.getElementById('email').value = user.email || '';
+      }
+
+      // Init Captcha
+      const captchaId = Captcha.create('captcha');
+
+      document.getElementById('submitForm').addEventListener('submit', e => {
+        e.preventDefault();
+
+        if (!Captcha.validate(captchaId)) {
+          alert('Incorrect captcha answer.');
+          return;
+        }
+
+        const data = {
+          id: 'sub-' + Date.now(),
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          os: document.getElementById('os').value,
+          category: document.getElementById('category').value,
+          title: document.getElementById('probTitle').value,
+          desc: document.getElementById('desc').value,
+          date: new Date().toISOString()
+        };
+
+        const submissions = Store.get('submissions', []);
+        submissions.push(data);
+        Store.set('submissions', submissions);
+
+        const msg = document.getElementById('msg');
+        msg.style.display = 'block';
+        msg.textContent = 'Thank you! Your submission has been received for review.';
+        e.target.reset();
+
+        // Reset Captcha
+        Captcha.create('captcha');
+      });
+    });
+  </script>
+</body>
+
+</html>

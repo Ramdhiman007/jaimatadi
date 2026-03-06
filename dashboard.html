@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - Technical Help Hub</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <span style="font-size: 1.5rem;">🔧</span> Technical Help Hub
+            </a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="problems.html">Problems</a>
+                <a href="dashboard.html" aria-current="page" style="color: var(--brand-primary);">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="padding: 2rem 1.5rem;">
+        <div class="card mb-4 text-center">
+            <h1>Welcome back! 👋</h1>
+            <p>Here are your saved guides and recent history.</p>
+        </div>
+
+        <h2 class="mt-4">🔖 Bookmarked Guides</h2>
+        <div id="bookmarks-list" class="grid">
+            <!-- Populated by JS -->
+            <p class="muted">No bookmarks yet.</p>
+        </div>
+
+        <h2 class="mt-4">🕒 Recently Viewed</h2>
+        <div id="history-list" class="grid">
+            <!-- Populated by JS -->
+            <p class="muted">No history yet.</p>
+        </div>
+    </main>
+
+    <script src="assets/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        function renderDashboard() {
+            const history = JSON.parse(localStorage.getItem('thh_history') || '[]');
+            const bookmarks = JSON.parse(localStorage.getItem('thh_bookmarks') || '[]');
+
+            // Render Booksmarks
+            const bookWrap = document.getElementById('bookmarks-list');
+            if (bookmarks.length > 0) {
+                bookWrap.innerHTML = bookmarks.map(item => createCard(item)).join('');
+            }
+
+            // Render History
+            const histWrap = document.getElementById('history-list');
+            if (history.length > 0) {
+                histWrap.innerHTML = history.map(item => createCard(item)).join('');
+            }
+        }
+
+        function createCard(item) {
+            // Re-use the existing card styles, but simplified
+            return `
+            <a class="card" href="problem.html?id=${item.id}" style="border-top: 4px solid var(--brand-primary);">
+              <div style="margin-bottom:auto">
+                <h3>${item.title}</h3>
+                <p class="muted">Viewed: ${new Date(item.date).toLocaleDateString()}</p>
+              </div>
+            </a>
+          `;
+        }
+    </script>
+</body>
+
+</html>

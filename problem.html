@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Problem Detail - Technical Help Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--brand-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .step-content {
+      flex-grow: 1;
+    }
+
+    .step-image {
+      margin-top: 1rem;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .step-image img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .screenshot-hint {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--brand-secondary);
+      font-style: italic;
+      background: rgba(79, 70, 229, 0.05);
+      border: 1px dashed var(--brand-secondary);
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="assets/img/logo.svg" alt="" width="32" height="32">
+        <span>Technical Help Hub</span>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="problems.html">Problems</a>
+        <a href="mobile-problems.html">Mobile</a>
+        <a href="faq.html">FAQs</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html" class="btn btn-sm">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <article id="content" style="max-width: 800px; margin: 0 auto; padding: 2rem 0;">
+      <div style="margin-bottom: 2rem;">
+        <a href="problems.html" style="font-size: 0.875rem; color: var(--text-muted); text-decoration: none;">&larr;
+          Back to Problems</a>
+      </div>
+
+      <header style="margin-bottom: 3rem;">
+        <h1 id="title" style="font-size: 2.5rem; margin-bottom: 0.5rem; line-height: 1.2;">Problem Title</h1>
+        <p id="summary" class="muted" style="font-size: 1.25rem; margin-bottom: 1.5rem; line-height: 1.6;">Problem
+          summary goes here.</p>
+        <div id="meta" class="meta" style="display: flex; gap: 0.5rem;"></div>
+      </header>
+
+      <div class="card">
+        <h2 style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">Steps to
+          Fix</h2>
+        <div id="steps" style="display: grid; gap: 2rem;"></div>
+      </div>
+
+      <div
+        style="margin-top: 3rem; background: var(--bg-surface); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); text-align: center;">
+        <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Was this guide helpful?</h3>
+        <div id="rating" style="display: flex; gap: 0.5rem; justify-content: center;"></div>
+        <div id="rateMsg" class="alert ok"
+          style="display:none; margin-top: 1rem; max-width: 300px; margin-left: auto; margin-right: auto;">Thanks for
+          your feedback!</div>
+      </div>
+
+      <section id="videoMount" aria-label="Video guide" style="margin-top: 3rem;"></section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Technical Help Hub</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/problems-db.js"></script>
+  <script>
+    // db is now loaded from problems-db.js
+
+
+    (function init() {
+      const id = new URLSearchParams(window.location.search).get('id');
+      const p = problemsDB[id];
+
+
+      if (!p) {
+        document.getElementById('content').innerHTML = '<div class="alert err text-center">Problem not found. <a href="problems.html" style="color:white; text-decoration: underline;">Go back</a></div>';
+        return;
+      }
+
+      document.title = `${p.title} - Technical Help Hub`;
+      document.getElementById('title').textContent = p.title;
+
+      // Inject Bookmark Button
+      const header = document.querySelector('.hero h1'); // or wherever title is
+      // Actually, let's append it to the summary or create a toolbar
+      // The current HTML structure has #title and #summary in a .hero-inner
+
+      // Let's create a toolbar div if it keeps things clean
+      const toolbar = document.createElement('div');
+      toolbar.className = 'mt-4';
+      toolbar.innerHTML = `<button id="btn-bookmark" class="btn btn-sm btn-secondary" onclick="App.toggleBookmark('${id}', '${p.title.replace(/'/g, "\\'")}')">☆ Bookmark</button>`;
+      document.getElementById('summary').parentNode.appendChild(toolbar);
+
+      document.getElementById('summary').textContent = p.summary;
+
+      // Save History
+      App.saveHistory(id, p.title);
+      App.updateBookmarkButton(id);
+
+      const stepsHtml = p.steps.map((s, i) => `
+    <div class="step">
+      <div class="step-num">${i + 1}</div>
+      <div class="step-content">
+        <p>${s.text}</p>
+        ${s.img ? `<div class="step-image"><img src="${s.img}" alt="${s.alt || ''}"></div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+      document.getElementById('steps').innerHTML = stepsHtml;
+
+      // Rating Logic
+      const ratingWrap = document.getElementById('rating');
+      const savedRating = Store.get('ratings', {})[id] || 0;
+
+      function renderStars(current) {
+        ratingWrap.innerHTML = '';
+        for (let i = 1; i <= 5; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = '★';
+          btn.style.background = 'transparent';
+          btn.style.border = 'none';
+          btn.style.fontSize = '2rem';
+          btn.style.cursor = 'pointer';
+          btn.style.color = i <= current ? '#f59e0b' : '#d1d5db';
+          btn.style.transition = 'color 0.2s';
+
+          btn.onmouseover = () => {
+            Array.from(ratingWrap.children).forEach((b, idx) => {
+              b.style.color = (idx + 1) <= i ? '#f59e0b' : '#d1d5db';
+            });
+          };
+
+          btn.onmouseleave = () => {
+            const saved = Store.get('ratings', {})[id] || 0;
+            Array.from(ratingWrap.children).forEach((b, idx) => {
+              b.style.color = (idx + 1) <= saved ? '#f59e0b' : '#d1d5db';
+            });
+          };
+
+          btn.onclick = () => {
+            const r = Store.get('ratings', {});
+            r[id] = i;
+            Store.set('ratings', r);
+            document.getElementById('rateMsg').style.display = 'block';
+            renderStars(i);
+          };
+
+          ratingWrap.appendChild(btn);
+        }
+      }
+      renderStars(savedRating);
+    })();
+  </script>
+</body>
+
+</html>

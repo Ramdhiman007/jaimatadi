@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog - Technical Help Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="assets/img/logo.svg" alt="" width="32" height="32">
+        <span>Technical Help Hub</span>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="problems.html">Problems</a>
+        <a href="mobile-problems.html">Mobile</a>
+        <a href="faq.html">FAQs</a>
+        <a href="blog.html" aria-current="page">Blog</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html" class="btn btn-sm">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="list-header" style="justify-content: center; margin-bottom: 3rem; text-align: center;">
+      <div>
+        <h1>Latest Tech Tips & News</h1>
+        <p class="muted">Insights, tutorials, and updates from our experts.</p>
+      </div>
+    </div>
+
+    <div id="blog-grid" class="cards">
+      <!-- Posts injected here -->
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Technical Help Hub</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js" defer></script>
+  <script>
+    const posts = [
+      {
+        title: 'How to Extend Laptop Battery Life',
+        date: 'Oct 24, 2023',
+        excerpt: 'Simple tips to squeeze more juice out of your battery, from power settings to screen brightness.',
+        img: 'assets/img/blog/battery.svg',
+        tag: 'Hardware'
+      },
+      {
+        title: 'Essential Backup Strategies',
+        date: 'Nov 02, 2023',
+        excerpt: 'The 3-2-1 rule explained: why you need multiple cloud and local copies of your data.',
+        img: 'assets/img/blog/backup.svg',
+        tag: 'Data'
+      },
+      {
+        title: 'Speed Up Windows 11',
+        date: 'Nov 15, 2023',
+        excerpt: 'Is your PC sluggish? Here are 5 quick tweaks to make Windows 11 fly again.',
+        img: 'assets/img/blog/windows.svg',
+        tag: 'Performance'
+      },
+      {
+        title: 'Recognizing Phishing Emails',
+        date: 'Dec 05, 2023',
+        excerpt: 'Learn the tell-tale signs of a scam email before you click that dangerous link.',
+        img: 'assets/img/blog/security.svg',
+        tag: 'Security'
+      },
+      {
+        title: 'Wi-Fi 6 vs Wi-Fi 6E: What’s the Difference?',
+        date: 'Jan 10, 2024',
+        excerpt: 'Understanding the new wireless standards and whether you need to upgrade your router.',
+        img: 'assets/img/blog/wifi.svg',
+        tag: 'Network'
+      }
+    ];
+
+    const grid = document.getElementById('blog-grid');
+    grid.innerHTML = posts.map(post => `
+  <article class="card" style="display: flex; flex-direction: column; gap: 1rem;">
+    <div style="height: 160px; background: var(--bg-surface-alt); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+        <span style="font-size: 3rem;">📰</span>
+    </div>
+    <div>
+        <div class="meta" style="margin-bottom: 0.5rem;">
+            <span class="badge" style="background: var(--bg-surface-alt);">${post.tag}</span>
+            <span class="muted" style="font-size: 0.875rem;">${post.date}</span>
+        </div>
+        <h3 style="margin-bottom: 0.5rem;">
+            <a href="#" style="text-decoration: none; color: inherit;">${post.title}</a>
+        </h3>
+        <p class="muted">${post.excerpt}</p>
+    </div>
+    <a href="#" class="btn btn-sm btn-secondary" style="margin-top: auto; align-self: flex-start;">Read Article</a>
+  </article>
+`).join('');
+  </script>
+</body>
+
+</html>

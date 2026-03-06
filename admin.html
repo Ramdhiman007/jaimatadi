@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard - Technical Help Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .admin-grid {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .data-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      position: relative;
+    }
+
+    .data-item h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+
+    .btn-delete {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #fee2e2;
+      color: #991b1b;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+
+    .btn-delete:hover {
+      background: #fecaca;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="assets/img/logo.svg" alt="" width="32" height="32">
+        <span>Technical Help Hub (Admin)</span>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <button id="logoutBtn" class="btn btn-sm btn-secondary">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="loginPrompt" style="display:none; text-align: center; margin-top: 4rem;">
+      <h1>Admin Access Required</h1>
+      <p class="muted">Please login to view this page.</p>
+      <a href="login.html?redirect=admin.html" class="btn">Go to Login</a>
+    </div>
+
+    <div id="dashboard" style="display:none">
+      <h1>Dashboard</h1>
+      <p class="muted" style="margin-bottom: 2rem;">Manage user submissions and messages.</p>
+
+      <div class="admin-grid">
+        <div>
+          <h2 style="border-bottom: 2px solid var(--brand-primary); padding-bottom: 0.5rem; display: inline-block;">
+            Feature Requests</h2>
+          <div id="subsList" style="display: grid; gap: 1rem; margin-top: 1rem;"></div>
+        </div>
+
+        <div>
+          <h2 style="border-bottom: 2px solid var(--brand-secondary); padding-bottom: 0.5rem; display: inline-block;">
+            Contact Messages</h2>
+          <div id="msgsList" style="display: grid; gap: 1rem; margin-top: 1rem;"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/js/app.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = Auth.getUser();
+      if (!user) {
+        document.getElementById('loginPrompt').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('dashboard').style.display = 'block';
+
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        Auth.logout();
+        window.location.href = 'index.html';
+      });
+
+      // Render Submissions
+      const subs = Store.get('submissions', []);
+      const subsContainer = document.getElementById('subsList');
+      if (subs.length === 0) subsContainer.innerHTML = '<p class="muted">No submissions yet.</p>';
+      else {
+        subsContainer.innerHTML = subs.map((s, i) => `
+      <div class="data-item">
+        <button class="btn-delete" onclick="deleteItem('submissions', ${i})">Delete</button>
+        <h3>${s.title}</h3>
+        <p class="muted" style="font-size: 0.85rem;">From: ${s.name} (${s.email})</p>
+        <p class="muted" style="font-size: 0.85rem;">OS: ${s.os} | Cat: ${s.category}</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">${s.desc}</p>
+        <small class="muted">${new Date(s.date).toLocaleDateString()}</small>
+      </div>
+    `).join('');
+      }
+
+      // Render Messages
+      const msgs = Store.get('messages', []);
+      const msgsContainer = document.getElementById('msgsList');
+      if (msgs.length === 0) msgsContainer.innerHTML = '<p class="muted">No messages yet.</p>';
+      else {
+        msgsContainer.innerHTML = msgs.map((m, i) => `
+      <div class="data-item">
+        <button class="btn-delete" onclick="deleteItem('messages', ${i})">Delete</button>
+        <h3>${m.subject}</h3>
+        <p class="muted" style="font-size: 0.85rem;">From: ${m.name} (${m.email})</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">${m.message}</p>
+        <small class="muted">${new Date(m.date).toLocaleDateString()}</small>
+      </div>
+    `).join('');
+      }
+    });
+
+    // Global scope for onclick handlers
+    window.deleteItem = function (key, index) {
+      if (!confirm('Are you sure you want to delete this item?')) return;
+      const items = Store.get(key, []);
+      items.splice(index, 1);
+      Store.set(key, items);
+      location.reload();
+    };
+  </script>
+</body>
+
+</html>

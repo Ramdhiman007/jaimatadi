@@ -12,38 +12,75 @@
   <style>
     .admin-grid {
       display: grid;
-      gap: 2rem;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      margin-top: 2rem;
     }
 
     .data-item {
       background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 1rem;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
       position: relative;
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .data-item:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
     }
 
     .data-item h3 {
       margin-top: 0;
-      font-size: 1.1rem;
+      font-size: 1.25rem;
+      padding-right: 4rem;
+      color: var(--text-main);
     }
 
     .btn-delete {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: #fee2e2;
-      color: #991b1b;
-      border: none;
-      padding: 0.25rem 0.5rem;
-      border-radius: var(--radius-sm);
+      top: 1.25rem;
+      right: 1.25rem;
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fee2e2;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-md);
       cursor: pointer;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: var(--transition-base);
     }
 
     .btn-delete:hover {
-      background: #fecaca;
+      background: #fee2e2;
+      border-color: #fecaca;
+      transform: scale(1.05);
+    }
+
+    .section-header {
+      border-bottom: 2px solid var(--brand-primary);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .badge-count {
+      background: var(--bg-surface-alt);
+      color: var(--text-muted);
+      padding: 0.2rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -76,15 +113,19 @@
 
       <div class="admin-grid">
         <div>
-          <h2 style="border-bottom: 2px solid var(--brand-primary); padding-bottom: 0.5rem; display: inline-block;">
-            Feature Requests</h2>
-          <div id="subsList" style="display: grid; gap: 1rem; margin-top: 1rem;"></div>
+          <div class="section-header">
+            <h2>Feature Requests</h2>
+            <span id="subsCount" class="badge-count">0</span>
+          </div>
+          <div id="subsList" style="display: grid; gap: 1.5rem;"></div>
         </div>
 
         <div>
-          <h2 style="border-bottom: 2px solid var(--brand-secondary); padding-bottom: 0.5rem; display: inline-block;">
-            Contact Messages</h2>
-          <div id="msgsList" style="display: grid; gap: 1rem; margin-top: 1rem;"></div>
+          <div class="section-header" style="border-color: var(--brand-secondary);">
+            <h2>Contact Messages</h2>
+            <span id="msgsCount" class="badge-count">0</span>
+          </div>
+          <div id="msgsList" style="display: grid; gap: 1.5rem;"></div>
         </div>
       </div>
     </div>
@@ -108,6 +149,7 @@
 
       // Render Submissions
       const subs = Store.get('submissions', []);
+      document.getElementById('subsCount').textContent = subs.length;
       const subsContainer = document.getElementById('subsList');
       if (subs.length === 0) subsContainer.innerHTML = '<p class="muted">No submissions yet.</p>';
       else {
@@ -115,16 +157,17 @@
       <div class="data-item">
         <button class="btn-delete" onclick="deleteItem('submissions', ${i})">Delete</button>
         <h3>${s.title}</h3>
-        <p class="muted" style="font-size: 0.85rem;">From: ${s.name} (${s.email})</p>
-        <p class="muted" style="font-size: 0.85rem;">OS: ${s.os} | Cat: ${s.category}</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem;">${s.desc}</p>
-        <small class="muted">${new Date(s.date).toLocaleDateString()}</small>
+        <p class="muted" style="font-size: 0.85rem; margin-bottom: 0.5rem;">From: <strong>${s.name}</strong> (${s.email})</p>
+        <p class="muted" style="font-size: 0.85rem; margin-bottom: 1rem;">OS: ${s.os} | Category: ${s.category}</p>
+        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--bg-surface-alt); font-size: 0.95rem;">${s.desc}</div>
+        <div style="margin-top: 1.5rem; text-align: right;"><small class="muted">${new Date(s.date).toLocaleDateString()}</small></div>
       </div>
     `).join('');
       }
 
       // Render Messages
       const msgs = Store.get('messages', []);
+      document.getElementById('msgsCount').textContent = msgs.length;
       const msgsContainer = document.getElementById('msgsList');
       if (msgs.length === 0) msgsContainer.innerHTML = '<p class="muted">No messages yet.</p>';
       else {
@@ -132,9 +175,9 @@
       <div class="data-item">
         <button class="btn-delete" onclick="deleteItem('messages', ${i})">Delete</button>
         <h3>${m.subject}</h3>
-        <p class="muted" style="font-size: 0.85rem;">From: ${m.name} (${m.email})</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem;">${m.message}</p>
-        <small class="muted">${new Date(m.date).toLocaleDateString()}</small>
+        <p class="muted" style="font-size: 0.85rem; margin-bottom: 0.5rem;">From: <strong>${m.name}</strong> (${m.email})</p>
+        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--bg-surface-alt); font-size: 0.95rem;">${m.message}</div>
+        <div style="margin-top: 1.5rem; text-align: right;"><small class="muted">${new Date(m.date).toLocaleDateString()}</small></div>
       </div>
     `).join('');
       }

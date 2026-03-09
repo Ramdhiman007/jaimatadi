@@ -58,12 +58,15 @@
   --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
   --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.25);
-
   --backdrop-blur: 12px;
   --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* --- AdSense Specific --- */
+  --ad-bg: rgba(0, 0, 0, 0.02);
+  --ad-border: rgba(0, 0, 0, 0.05);
 }
+
 
 /* --- Reset & Base --- */
 *,
@@ -200,6 +203,16 @@ p {
   color: var(--brand-primary);
 }
 
+.mobile-toggle {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-toggle {
+    display: flex !important;
+  }
+}
+
 /* --- Buttons --- */
 .btn {
   display: inline-flex;
@@ -240,6 +253,12 @@ p {
   color: var(--text-main);
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-sm);
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
 .btn-secondary:hover {
@@ -988,17 +1007,36 @@ textarea:focus {
   }
 }
 
-/* --- Utilities --- */
-.text-center {
-  text-align: center;
+/* --- General UI Layouts --- */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.mt-4 {
-  margin-top: 1rem;
+.qa-controls {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  background: var(--bg-surface);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.mb-4 {
-  margin-bottom: 1rem;
+.qa-search-wrapper {
+  flex: 1;
+  min-width: 280px;
+}
+
+.qa-btn-group {
+  display: flex;
+  gap: 0.75rem;
 }
 
 .sr-only {
@@ -1108,4 +1146,211 @@ textarea:focus {
   background: rgba(239, 68, 68, 0.1);
   color: var(--danger);
   border-color: transparent;
+}
+
+/* --- AdSense Layout & Components --- */
+.ad-unit {
+  margin: 2.5rem auto;
+  padding: 1.25rem;
+  background: var(--ad-bg);
+  border: 1px dashed var(--ad-border);
+  border-radius: var(--radius-md);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-base);
+  min-width: 120px;
+}
+
+.ad-unit::before {
+  content: "ADVERTISEMENT";
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-light);
+  margin-bottom: 0.75rem;
+}
+
+.ad-top-banner {
+  max-width: var(--container-width);
+  min-height: 120px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.ad-footer-banner {
+  max-width: var(--container-width);
+  min-height: 120px;
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+}
+
+/* --- Utility Classes --- */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.mt-5 {
+  margin-top: 2rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.mb-5 {
+  margin-bottom: 2rem;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-1 {
+  gap: 0.5rem;
+}
+
+.gap-2 {
+  gap: 1rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.small {
+  font-size: 0.875rem;
+}
+
+/* --- Search Large Homepage Refinement --- */
+.search-large {
+  max-width: 600px;
+  position: relative;
+  transition: var(--transition-base);
+  margin-left: 0;
+}
+
+.search-large input {
+  width: 100%;
+  padding: 1.25rem 2rem;
+  padding-right: 8.5rem;
+  /* Space for button */
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition-base);
+  height: 4rem;
+}
+
+.search-large button {
+  position: absolute;
+  right: 0.6rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  border-radius: var(--radius-full);
+  padding: 0 1.75rem;
+  box-shadow: none;
+  font-size: 0.95rem;
+  height: calc(4rem - 1rem);
+  /* Precise height match */
+}
+
+.ad-sidebar-box {
+  width: 100%;
+  min-height: 280px;
+  margin: 0 0 2rem 0;
+}
+
+.ad-inline {
+  width: 100%;
+  min-height: 100px;
+  margin: 3.5rem 0;
+}
+
+/* Layout variation for Sidebar */
+.has-sidebar {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 4rem;
+  align-items: start;
+}
+
+.main-content {
+  min-width: 0;
+  /* Prevent overflow issues in grid */
+}
+
+.sidebar {
+  position: sticky;
+  top: calc(var(--header-height) + 2rem);
+  padding-bottom: 2rem;
+}
+
+@media (max-width: 1100px) {
+  .has-sidebar {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .sidebar {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .ad-sidebar-box {
+    flex: 1 1 300px;
+  }
 }

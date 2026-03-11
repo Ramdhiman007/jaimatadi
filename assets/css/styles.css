@@ -500,6 +500,13 @@ textarea {
   font-size: 1rem;
   transition: var(--transition-base);
   box-shadow: var(--shadow-xs);
+  position: relative;
+  z-index: 50;
+}
+
+option {
+  background: var(--bg-surface);
+  color: var(--text-main);
 }
 
 input:focus,
@@ -753,6 +760,23 @@ textarea:focus {
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.4);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+
+}
+
+/* Override inline light backgrounds for dark theme */
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background:white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background:#fff"],
+[data-theme="dark"] [style*="background-color: #f3f4f6"],
+[data-theme="dark"] [style*="background-color:#f3f4f6"],
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: #f8f9fa"] {
+  background: var(--bg-surface-alt) !important;
+  background-color: var(--bg-surface-alt) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
 }
 
 /* --- Responsive --- */
@@ -1352,5 +1376,33 @@ textarea:focus {
 
   .ad-sidebar-box {
     flex: 1 1 300px;
+  }
+}
+
+/* Ensure code blocks and tables do not break layout on mobile */
+pre,
+code,
+.code-snippet {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  /* For wrapping long lines */
+  word-wrap: break-word;
+}
+
+/* Except for actual raw pre, better keep nowrap and just scroll X */
+pre {
+  white-space: pre;
+}
+
+table {
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }

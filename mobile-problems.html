@@ -167,6 +167,8 @@
             display: grid;
             grid-template-columns: 1fr auto auto auto;
             gap: 1rem;
+            position: relative;
+            z-index: 50;
         }
 
         .input-grp {
@@ -398,22 +400,28 @@
                 <button class="pill" data-cat="system">⚙️ System</button>
             </div>
 
-            <form class="search-row" id="filterForm">
-                <div class="input-grp">
-                    <input type="text" id="searchInput" placeholder="Search by problem (e.g. bluetooth, charge)...">
+            <form class="search search-grid" id="filterForm">
+                <div class="search-wrapper">
+                    <input type="search" id="searchInput" placeholder="Search by problem (e.g. bluetooth, charge)..."
+                        aria-label="Search problems">
+                    <button type="submit" class="search-btn-inner">Search</button>
                 </div>
-                <select id="osSelect" class="btn btn-secondary" style="background:#fff;">
-                    <option value="">All Devices</option>
-                    <option value="iOS">iPhone (iOS)</option>
-                    <option value="Android">Android</option>
-                </select>
-                <select id="diffSelect" class="btn btn-secondary" style="background:#fff;">
-                    <option value="">Any Difficulty</option>
-                    <option value="Easy">Easy</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Hard">Hard</option>
-                </select>
-                <button type="submit" class="btn">Search Guide</button>
+                <div class="select-wrapper">
+                    <select id="osSelect" aria-label="Device OS">
+                        <option value="">All Devices</option>
+                        <option value="iOS">iPhone (iOS)</option>
+                        <option value="Android">Android</option>
+                    </select>
+                </div>
+                <div class="select-wrapper">
+                    <select id="diffSelect" aria-label="Difficulty">
+                        <option value="">Any Difficulty</option>
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Filter Results</button>
             </form>
 
             <div class="difficulty-legend">

@@ -16,11 +16,25 @@ const App = {
     this.initScrollAnimations();
     this.setupIntersectionObserver();
     this.initMobileMenu();
-    this.preventCopy();
+    this.initSocialShares();
 
     // Auto-init specific modules based on page content
     if (document.getElementById('videoMount')) VideoPlayer.init();
     if (document.querySelector('.captcha')) Captcha.initAll();
+  },
+
+  initSocialShares() {
+    const shares = document.querySelectorAll('.share-btn');
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+
+    shares.forEach(btn => {
+      let href = btn.getAttribute('href');
+      if (href) {
+        href = href.replace('[URL]', url).replace('[TITLE]', title);
+        btn.setAttribute('href', href);
+      }
+    });
   },
 
   initMobileMenu() {
@@ -60,19 +74,6 @@ const App = {
   updateYear() {
     const el = document.getElementById('year');
     if (el) el.textContent = new Date().getFullYear();
-  },
-
-  preventCopy() {
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('copy', e => {
-      e.preventDefault();
-      // Optional: alert('Content is protected.');
-    });
-    document.addEventListener('cut', e => e.preventDefault());
-    document.addEventListener('selectstart', e => e.preventDefault());
-
-    // Prevent dragging images or text
-    document.addEventListener('dragstart', e => e.preventDefault());
   },
 
   handleGlobalSearch() {
@@ -132,28 +133,29 @@ const App = {
   },
 
   initTheme() {
-    const toggleBtn = document.createElement('button');
-    toggleBtn.className = 'btn btn-secondary';
-    toggleBtn.innerHTML = '🌓';
-    toggleBtn.style.marginLeft = '1rem';
-    toggleBtn.title = 'Toggle Dark Mode';
-    toggleBtn.id = 'theme-toggle';
+    let toggleBtn = document.getElementById('theme-toggle');
 
-    // Insert into nav
-    const nav = document.querySelector('.nav');
-    if (nav && !document.getElementById('theme-toggle')) {
-      nav.appendChild(toggleBtn);
+    if (!toggleBtn) {
+      toggleBtn = document.createElement('button');
+      toggleBtn.title = 'Toggle Dark Mode';
+      toggleBtn.id = 'theme-toggle';
+      toggleBtn.ariaLabel = 'Toggle Dark Mode';
+
+      const nav = document.querySelector('.nav');
+      if (nav) nav.appendChild(toggleBtn);
     }
 
     // Check saved preference
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
+    toggleBtn.innerHTML = savedTheme === 'dark' ? '☀️' : '🌓';
 
     toggleBtn.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme');
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
+      toggleBtn.innerHTML = next === 'dark' ? '☀️' : '🌓';
     });
   },
 

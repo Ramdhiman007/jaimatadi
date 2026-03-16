@@ -5,6 +5,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Testing Q&A - Technical Help Hub</title>
+    <meta name="description" content="Master software testing interviews with our massive collection of QA questions and answers. Covers Manual, Automation, API, and Mobile testing in English and Hinglish.">
+    <meta name="keywords" content="软件测试, QA Interview Questions, Manual Testing, Automation Testing, API Testing, Appium, Selenium">
+
+    <!-- Theme Flash Protection -->
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,14 +23,43 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
         crossorigin="anonymous"></script>
     <style>
+        :root {
+            --sidebar-width: 300px;
+            --content-gap: 2rem;
+        }
+
         .qa-container {
-            max-width: 950px;
-            margin: 3rem auto;
+            width: 100%;
+            margin: 0 0 2rem 0;
             background: var(--bg-surface, #ffffff);
             padding: 2.5rem;
             border-radius: var(--radius-xl, 15px);
             border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Layout Improvements */
+        .has-sidebar {
+            display: flex;
+            flex-direction: row;
+            gap: var(--content-gap);
+            align-items: flex-start;
+            margin-bottom: 3rem;
+        }
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            position: sticky;
+            top: 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
         details {
@@ -94,6 +134,9 @@
             border-bottom: 2px solid var(--border-light, #e5e7eb);
             padding-bottom: 0.5rem;
             font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
         .lang-badge {
@@ -118,7 +161,6 @@
             flex-direction: column;
             gap: 15px;
             margin-bottom: 2rem;
-            margin-top: 2rem;
             background: var(--bg-surface-alt, #f9fafb);
             padding: 1.5rem;
             border-radius: var(--radius-md, 8px);
@@ -145,7 +187,7 @@
             border-radius: var(--radius-sm, 6px);
             font-size: 1rem;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
             background: var(--bg-surface, #ffffff);
             color: var(--text-main, #111827);
         }
@@ -182,50 +224,10 @@
             color: #86efac;
         }
 
-        [data-theme="dark"] .btn-outline {
-            color: var(--text-main);
-        }
-
-        [data-theme="dark"] .btn-outline:hover {
-            background: var(--bg-surface-alt, #334155);
-        }
-
-        /* ── Back to Top ── */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--brand-primary);
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-            border: none;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .back-to-top:hover {
-            transform: translateY(-5px);
-            background: #4338ca;
-        }
-
         /* ── Table of Contents ── */
         .toc-container {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: var(--bg-surface-alt);
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
             padding: 1.5rem;
             margin: 1.5rem 0 2rem;
@@ -252,8 +254,8 @@
             color: var(--brand-primary);
             text-decoration: none;
             padding: 0.6rem 0.8rem;
-            background: white;
-            border: 1px solid #eef2ff;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-md);
             transition: all 0.2s;
             display: flex;
@@ -263,40 +265,7 @@
         .toc-link:hover {
             background: var(--brand-primary);
             color: white;
-            border-color: var(--brand-primary);
             transform: translateX(5px);
-        }
-
-        /* ── Social Share ── */
-        .share-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #f1f5f9;
-        }
-
-        .share-btn {
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--radius-full);
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            transition: all 0.2s;
-            text-decoration: none;
-            font-size: 1.1rem;
-        }
-
-        .share-btn:hover {
-            background: var(--brand-primary);
-            color: white;
-            border-color: var(--brand-primary);
-            transform: scale(1.1);
         }
 
         /* ── AdSense Optimization ── */
@@ -305,10 +274,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin: 2rem 0;
-            padding: 1rem;
-            background: #f8fafc;
-            border: 1px dashed #cbd5e1;
+            margin: 2.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-surface-alt);
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-md);
             overflow: hidden;
             min-height: 100px;
@@ -320,37 +289,33 @@
             position: absolute;
             top: 5px;
             left: 5px;
-            font-size: 0.65rem;
-            color: #94a3b8;
+            font-size: 0.6rem;
+            color: var(--text-light);
             font-weight: 700;
             letter-spacing: 0.05em;
         }
 
         .ad-top-leaderboard {
             min-height: 90px;
-            margin: 1.5rem auto;
-            max-width: 728px;
+            margin: 1.5rem 0;
+            width: 100%;
         }
 
         .ad-in-article {
-            min-height: 250px;
-            margin: 2.5rem 0;
+            min-height: 280px;
+            margin: 3rem 0;
+            background: rgba(0, 0, 0, 0.01);
         }
 
         .ad-sidebar-box {
             min-height: 250px;
-            margin-bottom: 2rem;
-            background: #f1f5f9;
+            margin-bottom: 1.5rem;
+            width: 100%;
         }
 
         .ad-footer-banner {
             min-height: 90px;
             margin: 3rem 0;
-        }
-
-        [data-theme="dark"] .ad-unit {
-            background: #1e293b;
-            border-color: #334155;
         }
 
         .breadcrumb {
@@ -369,6 +334,95 @@
         .breadcrumb a:hover {
             text-decoration: underline;
         }
+
+        /* ── Social Share ── */
+        .share-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-light, #e5e7eb);
+        }
+
+        .share-btn {
+            background: var(--bg-surface-alt, #f1f5f9);
+            border: 1px solid var(--border-light, #e2e8f0);
+            border-radius: var(--radius-full, 50px);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted, #64748b);
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .share-btn:hover {
+            background: var(--brand-primary, #6366f1);
+            color: white;
+            border-color: var(--brand-primary, #6366f1);
+            transform: scale(1.1);
+        }
+
+        /* ── Back to Top ── */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--brand-primary, #6366f1);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            border: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            background: #4338ca;
+        }
+
+        .ad-top-wrapper {
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-main {
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 1024px) {
+            .has-sidebar {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                order: 2;
+            }
+
+            .main-content {
+                order: 1;
+            }
+        }
     </style>
 </head>
 
@@ -376,36 +430,38 @@
     <header class="site-header">
         <div class="container header-inner">
             <a class="logo" href="index.html">
-                <img src="assets/img/logo.svg" alt="" width="32" height="32">
+                <img src="assets/img/logo.svg" alt="Technical Help Hub Logo" width="32" height="32">
                 <span>Technical Help Hub</span>
             </a>
             <nav class="nav">
                 <a href="index.html">Home</a>
-                <a href="problems.html">Problems</a>
+                <a href="problems.html">Troubleshooting</a>
                 <a href="mobile-problems.html">Mobile</a>
+                <a href="qa-testing.html" aria-current="page">Testing Q&A</a>
+                <a href="ai-testing.html">AI Testing</a>
                 <a href="faq.html">FAQs</a>
                 <a href="blog.html">Blog</a>
                 <a href="contact.html">Contact</a>
-                <a href="qa-testing.html" aria-current="page">Testing Q&A</a>
                 <a href="login.html" class="btn btn-sm">Login</a>
+                <button id="theme-toggle" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">🌓</button>
             </nav>
         </div>
     </header>
 
-    <div class="container" style="margin-top: 2rem;">
+    <div class="container ad-top-wrapper">
         <div class="ad-unit ad-top-banner">
             <!-- AD_PLACEHOLDER_TOP_BANNER -->
         </div>
     </div>
 
-    <main class="container">
+    <main class="container page-main">
         <div class="has-sidebar">
             <div class="main-content">
-                <div class="qa-container" style="margin-top: 0;">
+                <div class="qa-container">
                     <nav class="breadcrumb">
                         <a href="index.html">Home</a>
                         <span>/</span>
-                        <a href="problems.html">Interview Prep</a>
+                        <a href="problems.html">Troubleshooting</a>
                         <span>/</span>
                         <span>QA Testing Guide</span>
                     </nav>
@@ -414,6 +470,18 @@
                     </h1>
                     <p class="muted">A massive collection of frequently asked interview questions encompassing Manual
                         Testing, Automation Tools, Frameworks, and real-world scenarios.</p>
+
+                    <div
+                        style="background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); padding: 1.5rem; border-radius: 12px; border: 1px solid #c7d2fe; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                        <div>
+                            <h4 style="margin: 0; color: #4338ca; font-size: 1.1rem;">🤖 New: AI Testing Interview Prep
+                            </h4>
+                            <p style="margin: 0.25rem 0 0; font-size: 0.9rem; color: #4f46e5;">Master practical
+                                interview questions on ChatGPT, Self-healing, and AI tools in testing.</p>
+                        </div>
+                        <a href="ai-testing.html" class="btn btn-sm btn-primary" style="white-space: nowrap;">View AI
+                            Q&A</a>
+                    </div>
 
                     <div class="ad-unit ad-top-leaderboard">
                         <!-- AD_PLACEHOLDER_TOP_LEADERBOARD -->
@@ -449,10 +517,12 @@
                     <div class="toc-title">📌 Table of Contents</div>
                     <div class="toc-grid">
                         <a href="#general-qa" class="toc-link">General QA</a>
+                        <a href="#agile-methodology" class="toc-link">Agile & Test Cases</a>
                         <a href="#manual-testing" class="toc-link">Manual Testing (SDLC/STLC)</a>
                         <a href="#automation-testing" class="toc-link">Automation Testing</a>
                         <a href="#mobile-testing" class="toc-link">Mobile Testing (Appium)</a>
                         <a href="#cucumber-framework" class="toc-link">Cucumber Framework</a>
+                        <a href="#java-coding" class="toc-link">Core Java Coding</a>
                         <a href="#api-testing" class="toc-link">API Testing</a>
                         <a href="#web-services" class="toc-link">Web Services</a>
                         <a href="#java-programs" class="toc-link">Top 20 Java Programs</a>
@@ -703,7 +773,7 @@
                     </div>
                 </details>
 
-                <h2 class="section-title">📌 Manual Testing Questions with Answers</h2>
+                <h2 class="section-title" id="agile-methodology">📌 Agile Methodology & Test Cases</h2>
 
                 <details>
                     <summary>1. Have you worked in Agile methodology?</summary>
@@ -1329,8 +1399,10 @@
                     </div>
                 </details>
 
-                <div class="ad-unit ad-in-article" style="margin: 2rem 0;">
-                    <!-- AD_PLACEHOLDER_IN_ARTICLE_1 -->
+                <div class="ad-unit ad-in-article">
+                    <!-- AD_PLACEHOLDER_IN_ARTICLE_general-qa-end -->
+                    <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article"
+                        data-ad-format="fluid" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
                 </div>
 
                 <div class="ad-unit ad-in-article">
@@ -3057,8 +3129,10 @@ if(actual.contains("Laptop")){
                     </div>
                 </details>
 
-                <div class="ad-unit ad-in-article" style="margin: 2rem 0;">
-                    <!-- AD_PLACEHOLDER_IN_ARTICLE_3 -->
+                <div class="ad-unit ad-in-article">
+                    <!-- AD_PLACEHOLDER_IN_ARTICLE_mobile-testing -->
+                    <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article"
+                        data-ad-format="fluid" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
                 </div>
 
                 <div class="ad-unit ad-in-article">
@@ -3168,7 +3242,7 @@ Then user should be logged in successfully</code></pre>
                     </div>
                 </details>
 
-                <h2 class="section-title">?? Core Java & Coding Questions</h2>
+                <h2 class="section-title" id="java-coding">📌 Core Java & Coding Questions</h2>
 
                 <details>
                     <summary>1. OOPS Concepts and how you use them?</summary>
@@ -5755,28 +5829,34 @@ public class GridExample {
                     </div>
                 </details>
 
-            </div>
-        </div>
+                <div class="ad-unit ad-in-article">
+                    <!-- AD_PLACEHOLDER_IN_ARTICLE_END -->
+                    <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article"
+                        data-ad-format="fluid" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
+                </div>
 
-        <aside class="sidebar" style="margin-top: 2.5rem;">
-            <div class="ad-unit ad-sidebar-box">
-                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                    data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
             </div>
-            <div class="ad-unit ad-sidebar-box">
-                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                    data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            </div>
-            <div class="ad-unit ad-sidebar-box">
-                <!-- AD_PLACEHOLDER_SIDEBAR_QA_1 -->
-            </div>
-            <div class="ad-unit ad-sidebar-box">
-                <!-- AD_PLACEHOLDER_SIDEBAR_QA_2 -->
-            </div>
-            <div class="ad-unit ad-sidebar-box">
-                <!-- AD_PLACEHOLDER_SIDEBAR_QA_3 -->
-            </div>
-        </aside>
+
+            <aside class="sidebar">
+                <div class="ad-unit ad-sidebar-box">
+                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                        data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                </div>
+                <div class="ad-unit ad-sidebar-box">
+                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                        data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                </div>
+                <div class="ad-unit ad-sidebar-box">
+                    <!-- AD_PLACEHOLDER_SIDEBAR_QA_1 -->
+                </div>
+                <div class="ad-unit ad-sidebar-box">
+                    <!-- AD_PLACEHOLDER_SIDEBAR_QA_2 -->
+                </div>
+                <div class="ad-unit ad-sidebar-box">
+                    <!-- AD_PLACEHOLDER_SIDEBAR_QA_3 -->
+                </div>
+            </aside>
+        </div>
     </main>
 
     <div class="container">
@@ -5809,24 +5889,29 @@ public class GridExample {
                     let currentSection = null;
                     let currentSectionCount = 0;
 
-                    const container = document.querySelector('.qa-container');
+                    const container = document.querySelector('.main-content');
                     const children = container.children;
 
                     for (let i = 0; i < children.length; i++) {
                         const el = children[i];
+
+                        // Handle Section Titles
                         if (el.classList.contains('section-title')) {
-                            // Hide previous section if it has no matching elements
+                            // Close out previous section visibility
                             if (currentSection && currentSectionCount === 0) {
                                 currentSection.style.display = 'none';
                             } else if (currentSection) {
-                                currentSection.style.display = 'block';
+                                currentSection.style.display = 'flex'; // Use flex for section titles
                             }
 
                             currentSection = el;
                             currentSectionCount = 0;
-                        } else if (el.tagName === 'DETAILS') {
+                        }
+
+                        // Handle Questions
+                        else if (el.tagName === 'DETAILS') {
                             const text = el.textContent.toLowerCase();
-                            if (text.includes(term)) {
+                            if (term === "" || text.includes(term)) {
                                 el.style.display = 'block';
                                 currentSectionCount++;
                             } else {
@@ -5836,10 +5921,10 @@ public class GridExample {
                     }
 
                     // Final check for the very last section
-                    if (currentSection && currentSectionCount === 0) {
+                    if (currentSection && currentSectionCount === 0 && term !== "") {
                         currentSection.style.display = 'none';
                     } else if (currentSection) {
-                        currentSection.style.display = 'block';
+                        currentSection.style.display = 'flex';
                     }
                 });
             }

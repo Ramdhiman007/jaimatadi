@@ -4,7 +4,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Master software testing and fix PC/Mobile problems with Technical Help Hub. Comprehensive interview Q&A for Manual and Automation testing.">
+  <meta name="keywords" content="软件测试, QA Testing, Troubleshooting, PC Help, Mobile Help, Interview Preparation">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://technicalhelphub.com/">
+  <meta property="og:title" content="Technical Help Hub - Master QA Testing & Troubleshooting">
+  <meta property="og:description" content="Expert guides for software testing interviews and device troubleshooting.">
+  <meta property="og:image" content="assets/img/og-image.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Technical Help Hub">
+  <meta property="twitter:description" content="Master software testing and fix device problems.">
+
   <title>Technical Help Hub - Home</title>
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,18 +38,20 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="index.html">
-        <img src="assets/img/logo.svg" alt="" width="32" height="32">
+        <img src="assets/img/logo.svg" alt="Technical Help Hub Logo" width="32" height="32">
         <span>Technical Help Hub</span>
       </a>
       <nav class="nav">
         <a href="index.html" aria-current="page">Home</a>
-        <a href="problems.html">Problems</a>
+        <a href="problems.html">Troubleshooting</a>
         <a href="mobile-problems.html">Mobile</a>
+        <a href="qa-testing.html">Testing Q&A</a>
+        <a href="ai-testing.html">AI Testing</a>
         <a href="faq.html">FAQs</a>
         <a href="blog.html">Blog</a>
         <a href="contact.html">Contact</a>
-        <a href="qa-testing.html">Testing Q&A</a>
         <a href="login.html" class="btn btn-sm">Login</a>
+        <button id="theme-toggle" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">🌓</button>
       </nav>
     </div>
   </header>
@@ -96,6 +119,11 @@
           <h3>🧪 QA Testing</h3>
           <p>Master Manual & Automation Testing with detailed interview Q&A.</p>
           <span class="btn btn-secondary btn-sm">View Q&A</span>
+        </a>
+        <a class="card card-ai animate-fade-in-up delay-300" href="ai-testing.html">
+          <h3>🤖 AI Testing</h3>
+          <p>Prepare for AI in Testing roles with detailed practical interview questions.</p>
+          <span class="btn btn-primary btn-sm">New: AI Prep</span>
         </a>
       </div>
     </section>

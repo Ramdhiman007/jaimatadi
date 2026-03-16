@@ -40,6 +40,7 @@
   --col-data: #ec4899;
   --col-battery: #eab308;
   --col-app: #6366f1;
+  --col-ai: #8b5cf6;
   --col-system: #64748b;
   --col-connectivity: #06b6d4;
 
@@ -94,11 +95,11 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 
-  /* Make content read-only */
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  /* Make content readable and selectable */
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
 }
 
 img {
@@ -158,7 +159,7 @@ p {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 500;
   height: var(--header-height);
   background: var(--bg-glass-heavy);
   backdrop-filter: blur(var(--backdrop-blur));
@@ -166,11 +167,42 @@ p {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+#theme-toggle {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-left: 0.5rem;
+  font-size: 1.1rem;
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-light);
+  box-shadow: none;
+  cursor: pointer;
+  transition: var(--transition-base);
+  flex-shrink: 0;
+}
+
+#theme-toggle:hover {
+  background: var(--brand-primary);
+  color: white;
+  transform: rotate(20deg);
+  border-color: var(--brand-primary);
+}
+
+[data-theme="dark"] #theme-toggle {
+  background: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
 .header-inner {
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
 }
 
 .logo {
@@ -186,15 +218,17 @@ p {
 .nav {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
+  flex-wrap: nowrap;
 }
 
 .nav a {
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 0.65rem;
   border-radius: var(--radius-md);
   color: var(--text-muted);
   font-weight: 500;
   font-size: 0.95rem;
+  white-space: nowrap;
 }
 
 .nav a:hover,
@@ -457,6 +491,10 @@ p {
 
 .card-data::before {
   background: var(--col-data);
+}
+
+.card-ai::before {
+  background: var(--col-ai);
 }
 
 .card span.btn-secondary {

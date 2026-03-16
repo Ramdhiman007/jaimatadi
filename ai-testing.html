@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI for Manual & Automation Testing - Technical Help Hub</title>
+    <meta name="description" content="Prepare for the future of QA with AI-driven testing interview questions. Master ChatGPT, self-healing scripts, and predictive analysis.">
+    <meta name="keywords" content="AI Testing, Software Testing, ChatGPT for Testers, Automation, Machine Learning">
+    
+    <!-- Theme Flash Protection -->
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        .qa-hero {
+            padding: 5rem 0 3rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .qa-hero h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .search-section {
+            background: #ffffff;
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 4.5rem;
+            z-index: 90;
+            border-bottom: 1px solid var(--border-light);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            display: block;
+            padding: 1rem 1.5rem 1rem 3.5rem;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 1.05rem;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='螺旋21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' /%3E%3C/svg%3E") no-repeat 1.25rem center / 1.5rem;
+        }
+
+        .qa-grid {
+            padding: 3rem 0;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .qa-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .qa-item:hover {
+            border-color: var(--brand-primary);
+        }
+
+        .qa-header {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .qa-number {
+            font-weight: 800;
+            color: var(--brand-primary);
+            background: #eef2ff;
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .qa-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            flex: 1;
+        }
+
+        .qa-content {
+            display: none;
+            padding: 1.5rem;
+            border-top: 1px solid #f1f5f9;
+            background: #fafafa;
+        }
+
+        .qa-item.active .qa-content {
+            display: block;
+        }
+
+        .answer-block {
+            margin-bottom: 1.5rem;
+        }
+
+        .label {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .label-en {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .label-hi {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .label-ex {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .desc {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .desc ul {
+            margin-top: 0.5rem;
+            padding-left: 1.25rem;
+        }
+
+        .desc li {
+            margin-bottom: 0.25rem;
+        }
+
+        .btn-home {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .btn-home {
+                position: static;
+                display: block;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="logo" href="index.html">
+                <img src="assets/img/logo.svg" alt="Technical Help Hub Logo" width="32" height="32">
+                <span>Technical Help Hub</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="problems.html">Troubleshooting</a>
+                <a href="mobile-problems.html">Mobile</a>
+                <a href="qa-testing.html">Testing Q&A</a>
+                <a href="ai-testing.html" aria-current="page">AI Testing</a>
+                <a href="faq.html">FAQs</a>
+                <a href="blog.html">Blog</a>
+                <a href="contact.html">Contact</a>
+                <a href="login.html" class="btn btn-sm">Login</a>
+                <button id="theme-toggle" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">🌓</button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="qa-hero">
+        <div class="container">
+            <a href="index.html" class="btn-home">← Home</a>
+            <h1>AI Testing Interview Questions</h1>
+            <p>Comprehensive guide for Manual & Automation Testers. Ready for the next-gen interview.</p>
+        </div>
+    </section>
+
+    <div class="search-section">
+        <div class="container">
+            <input type="text" id="searchInput" class="search-box" placeholder="Search questions...">
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="qa-grid" id="qaList">
+            <!-- Questions 1-35 encoded here -->
+            <script>
+                const questions = [
+                    {
+                        q: "What is AI in Software Testing?",
+                        en: "Using AI tools to make testing faster and smarter. AI analyzes data, generates test cases, and finds bugs quickly.",
+                        hi: "AI testing ka matlab hai AI tools ka use karke testing ko fast aur smart banana. AI data analyze karta hai aur bugs jaldi find karta hai."
+                    },
+                    {
+                        q: "How is AI used in Testing?",
+                        en: "Generating test cases, finding bugs faster, analyzing test results, and predicting risky areas.",
+                        hi: "Automatic test cases banane, bugs jaldi dhundne, aur test results analyze karne ke liye."
+                    },
+                    {
+                        q: "What is Machine Learning in Testing?",
+                        en: "A part of AI where systems learn from data and improve over time without being programmed again.",
+                        hi: "Machine Learning AI ka part hai jisme system data se automatically learn karta hai bina extra code ke."
+                    },
+                    {
+                        q: "What is Self-Healing Automation?",
+                        en: "Automation scripts that fix themselves if UI elements like XPath or ID change.",
+                        hi: "Self-healing ka matlab hai scripts khud ko fix kar leti hain agar UI element change ho jaye."
+                    },
+                    {
+                        q: "Name some AI Testing Tools.",
+                        en: "Testim, Mabl, Functionize, Applitools, Test.ai.",
+                        hi: "Popular tools: Testim, Mabl, Functionize, Applitools, Test.ai."
+                    },
+                    {
+                        q: "How can AI help Manual Testers?",
+                        en: "Suggesting test cases, finding defects quickly, analyzing logs, and identifying high-risk modules.",
+                        hi: "Test cases suggest karne, bugs detect karne aur reports analyze karne mein help karta hai."
+                    },
+                    {
+                        q: "Can AI replace Software Testers?",
+                        en: "No. AI is a tool to help. Human thinking and decision-making are still very important.",
+                        hi: "Nahi. AI sirf ek tool hai, human thinking aur experience testing mein zaroori hai."
+                    },
+                    {
+                        q: "How can you use AI in Automation Testing?",
+                        en: "Smart locator identification, self-healing scripts, automatic test case generation, faster bug detection.",
+                        hi: "Smart locators, self-healing, aur fast bug detection ke liye automation mein AI use hota hai."
+                    },
+                    {
+                        q: "What is AI-based Test Case Generation?",
+                        en: "AI tools create test cases based on app behavior, user flows, and previous data.",
+                        hi: "AI app behavior ko samajh kar automatically test cases bana deta hai."
+                    },
+                    {
+                        q: "How can AI improve Test Automation?",
+                        en: "Reducing script maintenance, faster execution, detecting UI changes automatically.",
+                        hi: "Script maintenance kam hoti hai aur execution speed badh jati hai."
+                    },
+                    {
+                        q: "What is Predictive Analysis in Testing?",
+                        en: "Using AI to predict where defects are most likely to occur in the application.",
+                        hi: "AI batata hai ki application ke kis part mein bug aane ke chances zyada hain."
+                    },
+                    {
+                        q: "What is Smart Test Execution?",
+                        en: "Running the most important test cases first based on risk and past failures.",
+                        hi: "Important test cases ko pehle run karna priority ke base par."
+                    },
+                    {
+                        q: "What is Visual Testing in AI?",
+                        en: "Checking if UI layout looks correct across different devices and browsers using image comparison.",
+                        hi: "UI layout check karna devices par, Applitools jaise tools se."
+                    },
+                    {
+                        q: "How does AI help in Defect Prediction?",
+                        en: "Analyzing past defects and code changes to predict where new defects may occur.",
+                        hi: "Past bugs aur code changes se naye bugs predict karna."
+                    },
+                    {
+                        q: "How can ChatGPT help Testers?",
+                        en: "Generating test cases, writing scripts, explaining errors, and scenario creation.",
+                        hi: "ChatGPT test cases likhne, automation code banane aur errors samajhne mein help karta hai."
+                    },
+                    {
+                        q: "How do you use AI in your daily testing work?",
+                        en: "I use AI like ChatGPT to generate scenarios, explain complex code, and analyze error logs.",
+                        hi: "Main daily work mein ChatGPT se test scenarios aur code snippets generate karta hoon."
+                    },
+                    {
+                        q: "How can AI help in test case generation?",
+                        en: "By reading requirements and user stories to suggest positive and negative flows.",
+                        hi: "Requirements padhkar AI positive aur negative test flows suggest kar deta hai."
+                    },
+                    {
+                        q: "How do you use AI to write automation scripts?",
+                        en: "Generating code snippets, fixing script errors, and optimizing logic using AI tools.",
+                        hi: "Automation code likhne aur optimizes karne ke liye AI use karte hain."
+                    },
+                    {
+                        q: "How can AI help in bug analysis?",
+                        en: "By identifying root causes from logs and suggesting where the code might be broken.",
+                        hi: "AI logs se bug ka root cause identify karne mein help karta hai."
+                    },
+                    {
+                        q: "How does AI help in test data generation?",
+                        en: "Creating realistic but synthetic data like fake names, addresses, and credit cards.",
+                        hi: "Realistic test data (fake name, phone) generate karne ke liye AI best hai."
+                    },
+                    {
+                        q: "How can AI help in regression testing?",
+                        en: "Identifying which tests are impacted by code changes and running them first.",
+                        hi: "Impact analysis karke sirf wahi regression tests run karna jo change hue hain."
+                    },
+                    {
+                        q: "How can AI help in defect prediction?",
+                        en: "Forecasting which modules are brittle based on historical bug density.",
+                        hi: "Historical data se batana ki kaun sa module fail ho sakta hai."
+                    },
+                    {
+                        q: "How can AI improve automation script maintenance?",
+                        en: "By reducing manual locator updates through intelligent self-healing techniques.",
+                        hi: "Self-healing se bar-bar scripts ko thik karne ka time bach jata hai."
+                    },
+                    {
+                        q: "How can AI help in visual testing?",
+                        en: "Detecting alignment issues, font changes, and overlaps automatically.",
+                        hi: "UI misalignment aur overlaps ko AI fauran pakad leta hai."
+                    },
+                    {
+                        q: "How can AI help in test execution optimization?",
+                        en: "Scheduling tests to run in parallel and prioritizing high-risk areas.",
+                        hi: "Tests ko parallel chala kar aur zaroori tests ko pehle execute karke time save karta hai."
+                    },
+                    {
+                        q: "How can ChatGPT help automation testers?",
+                        en: "Writing boilerplate code, explaining Selenium errors, and refactoring scripts.",
+                        hi: "Boilerplate code aur complex errors samajhne mein helpful hai."
+                    },
+                    {
+                        q: "How can AI help in API testing?",
+                        en: "Generating payloads, validating schemas, and detecting anomalies in responses.",
+                        hi: "API payloads aur structure check karne mein AI smart hai."
+                    },
+                    {
+                        q: "How can AI help in performance testing?",
+                        en: "Analyzing load patterns and predicting system crashes under heavy logs.",
+                        hi: "High traffic par system kaise behave karega, ye AI predict karta hai."
+                    },
+                    {
+                        q: "How can AI help in log analysis?",
+                        en: "Searching through huge log files to find specific error signatures.",
+                        hi: "Badi log files mein error patterns jaldi search karta hai."
+                    },
+                    {
+                        q: "How can AI help in requirement analysis?",
+                        en: "Highlighting gaps or inconsistencies in user stories automatically.",
+                        hi: "Requirements mein gaps ya missing information identify karta hai."
+                    },
+                    {
+                        q: "How can AI help in cross-browser testing?",
+                        en: "Running screenshots across devices and finding UI differences automatically.",
+                        hi: "Different browsers mein UI differences bina dekhe identify kar leta hai."
+                    },
+                    {
+                        q: "How can AI help in mobile testing?",
+                        en: "Navigating mobile apps autonomously to find crashes and layout bugs.",
+                        hi: "Mobile apps ke crashes aur layout patterns check karta hai."
+                    },
+                    {
+                        q: "How can AI help in test reporting?",
+                        en: "Providing summaries and trends that show if quality is improving or declining.",
+                        hi: "Smart reports banata hai jo quality trends dikhate hain."
+                    },
+                    {
+                        q: "How can AI help in exploratory testing?",
+                        en: "Suggesting edge cases based on common user behavior patterns.",
+                        hi: "User behavior dekh kar naye test ideas suggest karta hai."
+                    },
+                    {
+                        q: "How can AI reduce testing time?",
+                        en: "By automating manual test planning and fixing broken automation scripts.",
+                        hi: "Manual planning aur repair time kam karke overall testing fast karta hai."
+                    }
+                ];
+
+                const container = document.getElementById('qaList');
+                questions.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'qa-item';
+                    div.innerHTML = `
+                        <div class="qa-header" onclick="this.parentElement.classList.toggle('active')">
+                            <div class="qa-number">${index + 1}</div>
+                            <div class="qa-title">${item.q}</div>
+                        </div>
+                        <div class="qa-content">
+                            <div class="answer-block">
+                                <span class="label label-en">Simple English</span>
+                                <div class="desc">${item.en}</div>
+                            </div>
+                            <div class="answer-block">
+                                <span class="label label-hi">Hinglish Explanation</span>
+                                <div class="desc">${item.hi}</div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+
+                document.getElementById('searchInput').addEventListener('input', function (e) {
+                    const term = e.target.value.toLowerCase();
+                    document.querySelectorAll('.qa-item').forEach(item => {
+                        item.style.display = item.innerText.toLowerCase().includes(term) ? 'block' : 'none';
+                    });
+                });
+            </script>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© <span id="year"></span> Technical Help Hub</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="admin.html">Admin</a>
+            </div>
+        </div>
+    </footer>
+    <script src="assets/js/app.js" defer></script>
+</body>
+
+</html>

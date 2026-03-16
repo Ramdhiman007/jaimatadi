@@ -364,12 +364,13 @@
       </a>
       <nav class="nav">
         <a href="index.html">Home</a>
-        <a href="problems.html">Problems</a>
+        <a href="problems.html">Troubleshooting</a>
         <a href="mobile-problems.html">Mobile</a>
+        <a href="qa-testing.html">Testing Q&A</a>
+        <a href="ai-testing.html">AI Testing</a>
         <a href="faq.html">FAQs</a>
         <a href="blog.html">Blog</a>
         <a href="contact.html">Contact</a>
-        <a href="qa-testing.html">Testing Q&A</a>
         <a href="login.html" class="btn btn-sm">Login</a>
       </nav>
     </div>
@@ -384,7 +385,7 @@
   <main class="container">
     <div class="has-sidebar">
       <article class="guide-article" id="content">
-        <a href="problems.html" class="back-link">← Back to All Problems</a>
+        <a href="problems.html" class="back-link">← Back to Troubleshooting</a>
         <!-- Populated by JS -->
       </article>
 
@@ -430,11 +431,11 @@
 
       if (!p) {
         content.innerHTML = `
-          <a href="problems.html" class="back-link">← Back to All Problems</a>
+          <a href="problems.html" class="back-link">← Back to Troubleshooting</a>
           <div style="text-align:center; padding:4rem 0; color:var(--text-muted);">
             <div style="font-size:3rem;">🔍</div>
             <h2 style="margin:1rem 0 0.5rem;">Problem not found</h2>
-            <p>This problem doesn't exist. <a href="problems.html" style="color:var(--brand-primary);">Browse all problems →</a></p>
+            <p>This problem doesn't exist. <a href="problems.html" style="color:var(--brand-primary);">Browse all Troubleshooting guides →</a></p>
           </div>`;
         return;
       }
@@ -502,7 +503,7 @@
 
       // Inject all sections
       content.innerHTML = `
-        <a href="problems.html" class="back-link">← Back to All Problems</a>
+        <a href="problems.html" class="back-link">← Back to Troubleshooting</a>
 
         <!-- ── 1. Header ── -->
         <header class="guide-header">

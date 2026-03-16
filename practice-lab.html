@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Practice Lab - The Bug Sandbox | Technical Help Hub</title>
+  <meta name="description" content="Improve your QA skills in our interactive Bug Sandbox. Find hidden defects, log bugs, and master manual testing in a safe lab environment.">
+  
+  <!-- Theme Flash Protection -->
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/components.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+  
+  <style>
+    .lab-hero {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lab-hero img.hero-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.1;
+      z-index: -1;
+    }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+      padding: 3rem 0;
+    }
+
+    @media (max-width: 992px) {
+      .lab-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── Sandbox Item ── */
+    .sandbox-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .sandbox-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bug-count-display {
+      background: var(--brand-primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    /* ── Buggy Login Form (INTERACTIVE BUGs) ── */
+    .buggy-form {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      transition: all 0.3s ease;
+    }
+
+    .buggy-form h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .buggy-input-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .buggy-input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .buggy-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      color: var(--text-main);
+    }
+
+    /* Bug 1: Password field sometimes shows plain text (simulated with a toggle) */
+    .password-wrapper {
+      position: relative;
+    }
+
+    /* Bug 2: Submit button jumps on hover */
+    .btn-buggy {
+      width: 100%;
+      padding: 0.875rem;
+      background: var(--brand-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .btn-buggy:hover {
+      transform: translateX(10px) translateY(-5px); /* BUG: Jumping button */
+    }
+
+    /* ── Bug Reporter Sidebar ── */
+    .bug-reporter {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      position: sticky;
+      top: 6rem;
+      height: fit-content;
+    }
+
+    .bug-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+    }
+
+    .bug-item {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .bug-item:hover {
+      background: var(--bg-surface-alt);
+    }
+
+    .bug-item.found {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid #10b981;
+    }
+
+    .bug-icon {
+      font-size: 1.25rem;
+    }
+
+    .bug-info h4 {
+      font-size: 0.9375rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .bug-info p {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .found-badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #10b981;
+      display: none;
+    }
+
+    .bug-item.found .found-badge {
+      display: block;
+    }
+
+    /* ── Animations ── */
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    .glitch-text {
+      animation: glitch 3s infinite;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header"></header>
+
+  <section class="lab-hero">
+    <img src="assets/img/testing_lab_hero_1773658931018.png" alt="" class="hero-bg">
+    <div class="container" style="position: relative; z-index: 1;">
+      <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 1rem;">
+        Testing <span class="glitch-text" style="color: var(--brand-primary);">Lab</span> & Sandbox
+      </h1>
+      <p style="font-size: 1.25rem; max-width: 700px; margin: 0 auto; color: var(--text-muted);">
+        The only place where finding bugs is a victory. Test the application below and log all the defects you can find.
+      </p>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- Module Switcher -->
+    <div style="display:flex; justify-content:center; gap:1rem; margin-bottom: 2rem;">
+        <button class="btn btn-sm btn-primary module-btn" onclick="switchModule(1)">Level 1: Auth Module</button>
+        <button class="btn btn-sm btn-secondary module-btn" onclick="switchModule(2)">Level 2: Search Module</button>
+    </div>
+
+    <div class="lab-grid">
+      
+      <!-- ── Sandbox Column ── -->
+      <div class="sandbox-column">
+        <!-- Level 1: Auth (Existing) -->
+        <div class="sandbox-container" id="module-1">
+          <div class="sandbox-header">
+            <div>
+              <h2 style="margin:0">Level 1: User Authentication</h2>
+              <p class="muted" style="margin:0">Instructions: Try to login. Pay attention to fields, buttons, and error messages.</p>
+            </div>
+            <div class="bug-count-display">Bugs: <span id="foundCount1">0</span>/6</div>
+          </div>
+          <!-- Form content same as before -->
+          <div class="buggy-form" id="sandboxForm">
+            <h2>Sign In</h2>
+            <form onsubmit="return handleSandboxSubmit(event)">
+              <div class="buggy-input-group">
+                <label for="email">Email Address</label>
+                <input type="text" id="email" class="buggy-input" placeholder="Enter your email" required onclick="checkBug(4)">
+              </div>
+              <div class="buggy-input-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                  <input type="password" id="password" class="buggy-input" placeholder="••••••••" required onclick="checkBug(2)">
+                </div>
+              </div>
+              <div style="margin-bottom: 1.5rem; text-align: right;">
+                <a href="fgt-pass.html" style="font-size: 0.8125rem; color: var(--brand-primary);" onclick="return checkBug(5)">Forgot Password?</a>
+              </div>
+              <button type="submit" class="btn-buggy" onmouseover="checkBug(1)">Secure Login</button>
+            </form>
+            <div id="sandboxMsg" class="alert mt-4" style="display:none; padding: 1rem; border-radius: var(--radius-md);"></div>
+          </div>
+        </div>
+
+        <!-- Level 2: Search (New) -->
+        <div class="sandbox-container" id="module-2" style="display:none;">
+          <div class="sandbox-header">
+            <div>
+              <h2 style="margin:0">Level 2: Product Search & Filter</h2>
+              <p class="muted" style="margin:0">Instructions: Test the product grid and filters. Look for data mismatches and broken UI.</p>
+            </div>
+            <div class="bug-count-display">Bugs: <span id="foundCount2">0</span>/5</div>
+          </div>
+
+          <div style="background: var(--bg-surface-alt); padding: 1.5rem; border-radius: var(--radius-lg);">
+             <div style="display:flex; gap:10px; margin-bottom: 1.5rem;">
+                <input type="text" id="searchInput" class="buggy-input" placeholder="Search products (e.g., iPhone...)" oninput="handleSearchBug(this.value)">
+                <button class="btn btn-primary" onclick="checkBug(10)">Search</button>
+             </div>
+
+             <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 1rem;" id="productGrid">
+                <!-- Products -->
+                <div class="card" style="padding: 1rem;" onclick="checkBug(7)">
+                    <div style="height: 100px; background: #ddd; margin-bottom: 0.5rem; border-radius: 4px;"></div>
+                    <h4 style="margin:0">Gaming Laptop</h4>
+                    <!-- Bug 7: Incorrect Price Formatting/Logic -->
+                    <p style="color: #059669; font-weight:700;">Price: $NaN</p>
+                </div>
+                <div class="card" style="padding: 1rem;">
+                    <div style="height: 100px; background: #ddd; margin-bottom: 0.5rem; border-radius: 4px;"></div>
+                    <h4 style="margin:0">Wireless Mouse</h4>
+                    <p style="color: #059669; font-weight:700;">Price: $25.00</p>
+                    <!-- Bug 8: Add to Cart button does nothing -->
+                    <button class="btn btn-sm btn-secondary" onclick="checkBug(8)">Add to Cart</button>
+                </div>
+                <!-- Bug 9: Duplicate Item -->
+                <div class="card" style="padding: 1rem;" onclick="checkBug(9)">
+                    <div style="height: 100px; background: #ddd; margin-bottom: 0.5rem; border-radius: 4px;"></div>
+                    <h4 style="margin:0">Wireless Mouse</h4>
+                    <p style="color: #059669; font-weight:700;">Price: $25.00</p>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Bug Report Column ── -->
+      <aside class="bug-reporter">
+        <h3 style="display:flex; align-items:center; gap:0.5rem">
+          <span>📝</span> <span id="logTitle">Level 1 Bug Log</span>
+        </h3>
+        <p class="muted" style="font-size: 0.8125rem;">Found a bug? Click it in the sandbox to log it here.</p>
+        
+        <!-- Level 1 Logs -->
+        <div class="bug-list" id="bugReportLog1">
+          <div class="bug-item" id="bug-1">
+            <div class="bug-icon">🖱️</div>
+            <div class="bug-info">
+              <h4>UI: Jumping Login Button</h4>
+              <p>The login button moves unexpectedly when hovered.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+          <!-- ... rest of level 1 items ... -->
+          <div class="bug-item" id="bug-2">
+            <div class="bug-icon">👁️</div>
+            <div class="bug-info">
+              <h4>Security: Password Leak</h4>
+              <p>Password characters are briefly visible or insecure.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+          <div class="bug-item" id="bug-3">
+            <div class="bug-icon">🔑</div>
+            <div class="bug-info">
+              <h4>Validation: Weak Auth</h4>
+              <p>System accepts weak "admin" credentials.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+          <div class="bug-item" id="bug-4">
+            <div class="bug-icon">📏</div>
+            <div class="bug-info">
+              <h4>UI: Layout Overflow</h4>
+              <p>Long input strings break the component layout.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+          <div class="bug-item" id="bug-5">
+            <div class="bug-icon">🔗</div>
+            <div class="bug-info">
+              <h4>Link: Broken Redirect</h4>
+              <p>"Forgot Password" leads to a non-existent page.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+          <div class="bug-item" id="bug-6">
+            <div class="bug-icon">🆘</div>
+            <div class="bug-info">
+              <h4>UX: Info Leakage</h4>
+              <p>Error messages provide too much info to attackers.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Level 2 Logs -->
+        <div class="bug-list" id="bugReportLog2" style="display:none;">
+          <div class="bug-item" id="bug-7">
+            <div class="bug-icon">🔢</div>
+            <div class="bug-info">
+              <h4>Data: Price Calculation</h4>
+              <p>Price field displays "NaN" instead of amount.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+          <div class="bug-item" id="bug-8">
+            <div class="bug-icon">🚫</div>
+            <div class="bug-info">
+              <h4>Function: Dead Button</h4>
+              <p>"Add to Cart" button has no event handler.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+          <div class="bug-item" id="bug-9">
+            <div class="bug-icon">👯</div>
+            <div class="bug-info">
+              <h4>Content: Duplicate Entry</h4>
+              <p>Product list contains duplicate items (Mouse).</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+          <div class="bug-item" id="bug-10">
+            <div class="bug-icon">🔎</div>
+            <div class="bug-info">
+              <h4>Logic: Search Failure</h4>
+              <p>Search button doesn't filter the actual list results.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+          <div class="bug-item" id="bug-11">
+            <div class="bug-icon">💥</div>
+            <div class="bug-info">
+              <h4>UI: Search Glitch</h4>
+              <p>Typing 'SQL' in search causes a simulated UI crash.</p>
+              <span class="found-badge">Log Success</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="completionMsg" class="alert ok mt-4" style="display:none; font-size: 0.875rem;">
+          <strong>🎉 Lab Pro!</strong> You found all the bugs in this module. Ready for more?
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script>
+    let foundBugs = new Set();
+    const totalBugsLevel1 = 6;
+    const totalBugsLevel2 = 5;
+    let currentModule = 1;
+
+    function switchModule(moduleNum) {
+        currentModule = moduleNum;
+        
+        // UI Switching
+        document.getElementById('module-1').style.display = moduleNum === 1 ? 'block' : 'none';
+        document.getElementById('module-2').style.display = moduleNum === 2 ? 'block' : 'none';
+        document.getElementById('bugReportLog1').style.display = moduleNum === 1 ? 'block' : 'none';
+        document.getElementById('bugReportLog2').style.display = moduleNum === 2 ? 'block' : 'none';
+        document.getElementById('logTitle').textContent = `Level ${moduleNum} Bug Log`;
+        
+        // Button Styles
+        const btns = document.querySelectorAll('.module-btn');
+        btns[0].className = moduleNum === 1 ? 'btn btn-sm btn-primary module-btn' : 'btn btn-sm btn-secondary module-btn';
+        btns[1].className = moduleNum === 2 ? 'btn btn-sm btn-primary module-btn' : 'btn btn-sm btn-secondary module-btn';
+        
+        updateCounter();
+    }
+
+    function checkBug(id) {
+      if (id === 5) {
+        if(event) event.preventDefault();
+      }
+
+      if (foundBugs.has(id)) return;
+      
+      foundBugs.add(id);
+      const bugItem = document.getElementById(`bug-${id}`);
+      if (bugItem) {
+        bugItem.classList.add('found');
+      }
+      
+      updateCounter();
+    }
+
+    function handleSearchBug(val) {
+        if (val.toUpperCase().includes('SQL')) {
+            checkBug(11);
+            alert("⚠️ SYSTEM ERROR: SQL Injection pattern detected. Page stack overflow simulation triggered.");
+            document.getElementById('module-2').style.opacity = "0.5";
+            setTimeout(() => document.getElementById('module-2').style.opacity = "1", 1000);
+        }
+    }
+
+    function updateCounter() {
+      const count1 = Array.from(foundBugs).filter(id => id <= 6).length;
+      const count2 = Array.from(foundBugs).filter(id => id > 6).length;
+      
+      if (document.getElementById('foundCount1')) document.getElementById('foundCount1').textContent = count1;
+      if (document.getElementById('foundCount2')) document.getElementById('foundCount2').textContent = count2;
+
+      const currentTotal = currentModule === 1 ? totalBugsLevel1 : totalBugsLevel2;
+      const currentFound = currentModule === 1 ? count1 : count2;
+
+      document.getElementById('completionMsg').style.display = currentFound === currentTotal ? 'block' : 'none';
+    }
+
+    function handleSandboxSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('password').value;
+      const msg = document.getElementById('sandboxMsg');
+
+      msg.style.display = 'block';
+      msg.className = 'alert mt-4';
+
+      if (email === 'admin' && pass === 'admin') {
+        checkBug(3);
+        msg.className = "alert ok mt-4";
+        msg.innerHTML = "<strong>Bug Found!</strong> Successfully logged in with insecure 'admin/admin' credentials.";
+        msg.style.background = "rgba(16,185,129,0.1)";
+        msg.style.color = "#10b981";
+      } else {
+        checkBug(6);
+        msg.className = "alert error mt-4";
+        msg.innerHTML = "<strong>Error:</strong> User with password '" + pass + "' not found. (Info Leakage!)";
+        msg.style.background = "rgba(239, 68, 68, 0.1)";
+        msg.style.color = "#dc2626";
+      }
+    }
+
+    // Auto-check for layout overflow
+    document.getElementById('email').addEventListener('input', function(e) {
+      if (this.value.length > 30) {
+        checkBug(4);
+      }
+    });
+  </script>
+</body>
+
+</html>

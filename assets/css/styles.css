@@ -197,6 +197,23 @@ p {
   border-color: var(--border-color);
 }
 
+.site-header {
+  height: var(--header-height);
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: var(--transition-base);
+}
+
+[data-theme="dark"] .site-header {
+  background: rgba(15, 23, 42, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .header-inner {
   height: 100%;
   display: flex;

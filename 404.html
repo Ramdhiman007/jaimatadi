@@ -7,15 +7,22 @@
     <title>Page Not Found - Technical Help Hub</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    
+    <!-- Theme Flash Protection -->
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    
+    <script src="assets/js/components.js" defer></script>
+    <script src="assets/js/app.js" defer></script>
 </head>
 
 <body>
 
-    <nav class="nav" style="justify-content: center; padding: 1rem;">
-        <a href="index.html" class="logo">
-            <span style="font-size: 1.5rem;">🔧</span> Technical Help Hub
-        </a>
-    </nav>
+    <header class="site-header"></header>
 
     <div class="container text-center" style="padding: 4rem 0;">
         <h1 style="font-size: 6rem; margin-bottom: 1rem; color: var(--brand-primary);">404</h1>
@@ -38,7 +45,7 @@
         </div>
     </div>
 
-    <script src="assets/js/app.js"></script>
+    <footer class="site-footer"></footer>
 </body>
 
 </html>

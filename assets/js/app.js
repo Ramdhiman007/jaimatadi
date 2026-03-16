@@ -12,11 +12,13 @@ const App = {
     this.updateYear();
     this.handleGlobalSearch();
     this.checkAuthStatus();
-    this.initTheme();
+    // theme init moved after global components to handle injected toggle
+    setTimeout(() => this.initTheme(), 0); 
     this.initScrollAnimations();
     this.setupIntersectionObserver();
     this.initMobileMenu();
     this.initSocialShares();
+    this.initExamMode();
 
     // Auto-init specific modules based on page content
     if (document.getElementById('videoMount')) VideoPlayer.init();
@@ -133,9 +135,11 @@ const App = {
   },
 
   initTheme() {
-    let toggleBtn = document.getElementById('theme-toggle');
+    // Look for either the hardcoded toggle or the component-generated one
+    let toggleBtn = document.getElementById('theme-toggle') || document.getElementById('theme-toggle-comp');
 
     if (!toggleBtn) {
+      // Fallback: Create it if totally missing
       toggleBtn = document.createElement('button');
       toggleBtn.title = 'Toggle Dark Mode';
       toggleBtn.id = 'theme-toggle';
@@ -188,7 +192,6 @@ const App = {
     localStorage.setItem('thh_bookmarks', JSON.stringify(bookmarks));
     this.updateBookmarkButton(id);
   },
-
   updateBookmarkButton(id) {
     const btn = document.getElementById('btn-bookmark');
     if (!btn) return;
@@ -199,6 +202,93 @@ const App = {
     btn.classList.toggle('btn-secondary', !isSaved);
     btn.style.background = isSaved ? 'var(--brand-primary)' : '';
     btn.style.color = isSaved ? 'white' : '';
+  },
+
+  initExamMode() {
+    const listHeader = document.querySelector('.list-header');
+    // Look for .qa-item OR details tags in the main content area
+    const qaItems = document.querySelectorAll('.qa-item, .main-content details');
+    if (!listHeader || qaItems.length === 0) return;
+
+    const toolbar = document.createElement('div');
+    toolbar.className = 'exam-toolbar';
+    toolbar.style.cssText = 'display: flex; gap: 1rem; margin-top: 1rem; justify-content: center;';
+    
+    toolbar.innerHTML = `
+      <button class="btn btn-sm btn-secondary" id="toggle-answers">🙈 Hide All Answers</button>
+      <button class="btn btn-sm btn-secondary" id="reset-exam">♻️ Reset Progress</button>
+    `;
+
+    listHeader.appendChild(toolbar);
+
+    const toggleBtn = document.getElementById('toggle-answers');
+    let hidden = false;
+
+    toggleBtn.addEventListener('click', () => {
+      hidden = !hidden;
+      qaItems.forEach(item => {
+        if (item.tagName === 'DETAILS') {
+          item.open = !hidden;
+        } else {
+          const answer = item.querySelector('.qa-answer, .qa-content');
+          if (answer) answer.style.display = hidden ? 'none' : 'block';
+        }
+      });
+      toggleBtn.textContent = hidden ? '👁️ Show All Answers' : '🙈 Hide All Answers';
+    });
+
+    // Add "Mark as Learned" toggle for each QA item
+    const learned = JSON.parse(localStorage.getItem('thh_learned') || '[]');
+
+    qaItems.forEach(item => {
+      // Find title: either inside summary or a header
+      const title = item.querySelector('summary, h3, h4');
+      if (!title) return;
+      
+      const qId = btoa(title.textContent).substring(0, 16);
+      const isLearned = learned.includes(qId);
+      
+      const check = document.createElement('button');
+      check.className = 'learned-btn';
+      check.innerHTML = isLearned ? '✅' : '⚪';
+      check.title = 'Mark as Learned';
+      check.style.cssText = 'background:none; border:none; cursor:pointer; font-size: 1.2rem; margin-right: 0.5rem;';
+      
+      if (title.tagName === 'SUMMARY') {
+          title.style.display = 'flex';
+          title.style.alignItems = 'center';
+          title.style.justifyContent = 'flex-start';
+          title.prepend(check);
+      } else {
+          title.prepend(check);
+      }
+      
+      if (isLearned) item.style.opacity = '0.6';
+
+      check.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const currentLearned = JSON.parse(localStorage.getItem('thh_learned') || '[]');
+        if (currentLearned.includes(qId)) {
+          const idx = currentLearned.indexOf(qId);
+          currentLearned.splice(idx, 1);
+          check.innerHTML = '⚪';
+          item.style.opacity = '1';
+        } else {
+          currentLearned.push(qId);
+          check.innerHTML = '✅';
+          item.style.opacity = '0.6';
+        }
+        localStorage.setItem('thh_learned', JSON.stringify(currentLearned));
+      });
+    });
+
+    document.getElementById('reset-exam').addEventListener('click', () => {
+      if (confirm('Reset all "Learned" progress?')) {
+        localStorage.removeItem('thh_learned');
+        window.location.reload();
+      }
+    });
   }
 };
 

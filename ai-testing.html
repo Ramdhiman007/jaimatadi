@@ -20,6 +20,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="assets/js/components.js" defer></script>
+    <script src="assets/js/app.js" defer></script>
     <style>
         .qa-hero {
             padding: 5rem 0 3rem;
@@ -179,42 +181,93 @@
                 margin: 1rem;
             }
         }
+
+        /* ── Study Mode Styles ── */
+        body.study-mode .qa-content .desc {
+            filter: blur(8px);
+            transition: filter 0.3s ease;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        body.study-mode .qa-item.revealed .qa-content .desc {
+            filter: blur(0);
+            user-select: auto;
+        }
+
+        .study-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-surface-alt);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .study-mode-toggle.active {
+            background: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+        }
+
+        .toggle-switch {
+            width: 32px;
+            height: 18px;
+            background: #cbd5e1;
+            border-radius: 10px;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .study-mode-toggle.active .toggle-switch {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .study-mode-toggle.active .toggle-switch::after {
+            transform: translateX(14px);
+        }
     </style>
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="container header-inner">
-            <a class="logo" href="index.html">
-                <img src="assets/img/logo.svg" alt="Technical Help Hub Logo" width="32" height="32">
-                <span>Technical Help Hub</span>
-            </a>
-            <nav class="nav">
-                <a href="index.html">Home</a>
-                <a href="problems.html">Troubleshooting</a>
-                <a href="mobile-problems.html">Mobile</a>
-                <a href="qa-testing.html">Testing Q&A</a>
-                <a href="ai-testing.html" aria-current="page">AI Testing</a>
-                <a href="faq.html">FAQs</a>
-                <a href="blog.html">Blog</a>
-                <a href="contact.html">Contact</a>
-                <a href="login.html" class="btn btn-sm">Login</a>
-                <button id="theme-toggle" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">🌓</button>
-            </nav>
-        </div>
-    </header>
+    <header class="site-header"></header>
 
     <section class="qa-hero">
         <div class="container">
             <a href="index.html" class="btn-home">← Home</a>
-            <h1>AI Testing Interview Questions</h1>
-            <p>Comprehensive guide for Manual & Automation Testers. Ready for the next-gen interview.</p>
+            <div class="list-header">
+                <h1>AI Testing Interview Questions</h1>
+                <p>Comprehensive guide for Manual & Automation Testers. Ready for the next-gen interview.</p>
+            </div>
         </div>
     </section>
 
     <div class="search-section">
-        <div class="container">
-            <input type="text" id="searchInput" class="search-box" placeholder="Search questions...">
+        <div class="container" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <input type="text" id="searchInput" class="search-box" placeholder="Search questions..." style="margin:0">
+            </div>
+            <button id="studyModeToggle" class="study-mode-toggle" title="Hide answers to test yourself">
+                <div class="toggle-switch"></div>
+                <span>Interview Study Mode</span>
+            </button>
         </div>
     </div>
 
@@ -409,7 +462,7 @@
                             <div class="qa-number">${index + 1}</div>
                             <div class="qa-title">${item.q}</div>
                         </div>
-                        <div class="qa-content">
+                        <div class="qa-content" onclick="this.parentElement.classList.add('revealed')">
                             <div class="answer-block">
                                 <span class="label label-en">Simple English</span>
                                 <div class="desc">${item.en}</div>
@@ -418,9 +471,29 @@
                                 <span class="label label-hi">Hinglish Explanation</span>
                                 <div class="desc">${item.hi}</div>
                             </div>
+                            <div class="study-reveal-tip" style="display:none; font-size: 0.75rem; text-align:center; color: var(--brand-primary); margin-top: 1rem; font-weight: 700;">
+                                Click answer to reveal
+                            </div>
                         </div>
                     `;
                     container.appendChild(div);
+                });
+
+                // Study Mode Toggle Logic
+                const studyToggle = document.getElementById('studyModeToggle');
+                studyToggle.addEventListener('click', () => {
+                    const isActive = document.body.classList.toggle('study-mode');
+                    studyToggle.classList.toggle('active', isActive);
+                    
+                    // Reset revealed items when toggling
+                    document.querySelectorAll('.qa-item').forEach(item => {
+                        item.classList.remove('revealed');
+                    });
+
+                    // Log analytics or show info
+                    if (isActive) {
+                        alert("Flashcard Mode Active! Answers are blurred. Click on an answer to reveal it.");
+                    }
                 });
 
                 document.getElementById('searchInput').addEventListener('input', function (e) {
@@ -433,17 +506,8 @@
         </div>
     </main>
 
-    <footer class="site-footer">
-        <div class="container footer-inner">
-            <p>© <span id="year"></span> Technical Help Hub</p>
-            <div class="footer-links">
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
-                <a href="admin.html">Admin</a>
-            </div>
-        </div>
-    </footer>
-    <script src="assets/js/app.js" defer></script>
+    <footer class="site-footer"></footer>
+
 </body>
 
 </html>

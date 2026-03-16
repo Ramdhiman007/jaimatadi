@@ -10,6 +10,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+  
+  <!-- Theme Flash Protection -->
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  
+  <script src="assets/js/components.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
   <style>
     /* ── Article Layout ── */
     .guide-article {
@@ -356,25 +367,7 @@
 
 <body>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="logo" href="index.html">
-        <img src="assets/img/logo.svg" alt="" width="32" height="32">
-        <span>Technical Help Hub</span>
-      </a>
-      <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="problems.html">Troubleshooting</a>
-        <a href="mobile-problems.html">Mobile</a>
-        <a href="qa-testing.html">Testing Q&A</a>
-        <a href="ai-testing.html">AI Testing</a>
-        <a href="faq.html">FAQs</a>
-        <a href="blog.html">Blog</a>
-        <a href="contact.html">Contact</a>
-        <a href="login.html" class="btn btn-sm">Login</a>
-      </nav>
-    </div>
-  </header>
+  <header class="site-header"></header>
 
   <div class="container" style="margin-top: 2rem;">
     <div class="ad-unit ad-top-banner">
@@ -408,18 +401,9 @@
     </div>
   </div>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>© <span id="year"></span> Technical Help Hub</p>
-      <div class="footer-links">
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Service</a>
-        <a href="admin.html">Admin</a>
-      </div>
-    </div>
-  </footer>
+  <footer class="site-footer"></footer>
 
-  <script src="assets/js/app.js"></script>
+
   <script src="assets/js/problems-db.js?v=1.1"></script>
 
   <script>

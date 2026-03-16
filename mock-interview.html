@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Mock Interview Lab - Pro QA Preparation | Technical Help Hub</title>
+    <meta name="description" content="Ultimate AI Mock Interview Simulator for software testers. Practice Manual, Automation, API, and SQL testing with real-time feedback and Hinglish explanations.">
+
+    <!-- Theme Flash Protection -->
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="assets/js/components.js" defer></script>
+    <script src="assets/js/app.js" defer></script>
+
+    <style>
+        :root {
+            --chat-bg: var(--bg-surface);
+            --bubble-ai: var(--bg-surface-alt);
+            --bubble-user: var(--brand-primary);
+            --accent-soft: rgba(99, 102, 241, 0.1);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            background-attachment: fixed;
+            background-image: 
+                radial-gradient(circle at 10% 20%, var(--accent-soft), transparent 30%),
+                radial-gradient(circle at 90% 80%, var(--accent-soft), transparent 30%);
+        }
+
+        /* ── Setup & Flow ── */
+        .setup-card {
+            max-width: 850px;
+            margin: 4rem auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-2xl);
+            padding: 3rem;
+            box-shadow: var(--shadow-2xl);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin: 2rem 0;
+        }
+
+        .cat-item {
+            position: relative;
+            padding: 1.5rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .cat-item input { position: absolute; opacity: 0; }
+        .cat-item:hover { border-color: var(--brand-primary); transform: translateY(-3px); }
+        .cat-item.active { 
+            border-color: var(--brand-primary); 
+            background: var(--accent-soft);
+            box-shadow: 0 10px 20px -10px var(--brand-primary);
+        }
+
+        .icon-box { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        /* ── Dashboard Layout ── */
+        .interview-container {
+            display: none;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+            margin: 2rem auto;
+            height: calc(100vh - 180px);
+            min-height: 600px;
+        }
+
+        @media (max-width: 1024px) {
+            .interview-container { grid-template-columns: 1fr; height: auto; }
+        }
+
+        /* ── Professional Chat Interface ── */
+        .chat-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-2xl);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .chat-header {
+            padding: 1.25rem 2rem;
+            background: var(--bg-surface-alt);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 8px;
+            background: var(--border-light);
+            border-radius: 4px;
+            max-width: 200px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-primary), #a855f7);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .chat-scroll {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
+            animation: msgFade 0.4s ease;
+        }
+
+        .message.ai { align-self: flex-start; }
+        .message.user { align-self: flex-end; }
+
+        .bubble {
+            padding: 1.25rem 1.5rem;
+            border-radius: 1.25rem;
+            font-size: 1rem;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .ai .bubble {
+            background: var(--bg-surface-alt);
+            border: 1px solid var(--border-light);
+            border-bottom-left-radius: 4px;
+            color: var(--text-main);
+        }
+
+        .user .bubble {
+            background: var(--brand-primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+        }
+
+        .chat-input-area {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: 1rem;
+            background: var(--bg-surface-alt);
+        }
+
+        .input-box {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.25rem;
+            color: var(--text-main);
+            font-family: inherit;
+            resize: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-box:focus { border-color: var(--brand-primary); outline: none; }
+
+        /* ── Sidebar Stats ── */
+        .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .mini-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .timer-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+        }
+
+        /* ── Review System ── */
+        .review-panel {
+            display: none;
+            max-width: 1000px;
+            margin: 3rem auto;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .review-item {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .review-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .status-pill {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .status-correct { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .status-wrong { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+        .explanation-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface-alt);
+            border-left: 4px solid var(--brand-primary);
+        }
+
+        .hinglish-text { color: var(--text-muted); font-style: italic; margin-top: 0.5rem; }
+
+        /* ── Animations ── */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes msgFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+
+<body>
+    <header class="site-header"></header>
+
+    <main class="container">
+        
+        <!-- 🚀 Step 1 & 2: Project Setup -->
+        <div id="setupArea" class="setup-card">
+            <h1 style="text-align:center; font-size:2.75rem; font-weight:900; letter-spacing:-0.05em;">AI Interview <span style="color:var(--brand-primary)">Lab</span></h1>
+            <p style="text-align:center; color:var(--text-muted); margin-bottom:3rem;">Choose your specialization and difficulty to simulate a real-world technical round.</p>
+
+            <h3>Choose Interview Domain</h3>
+            <div class="category-grid">
+                <div class="cat-item active" data-cat="manual">
+                    <span class="icon-box">✍️</span>
+                    <strong>Manual Testing</strong>
+                </div>
+                <div class="cat-item" data-cat="automation">
+                    <span class="icon-box">⚡</span>
+                    <strong>Automation</strong>
+                </div>
+                <div class="cat-item" data-cat="api">
+                    <span class="icon-box">🔌</span>
+                    <strong>API Testing</strong>
+                </div>
+                <div class="cat-item" data-cat="sql">
+                    <span class="icon-box">🗄️</span>
+                    <strong>SQL Testing</strong>
+                </div>
+                <div class="cat-item" data-cat="ai">
+                    <span class="icon-box">🤖</span>
+                    <strong>AI in Testing</strong>
+                </div>
+                <div class="cat-item" data-cat="mixed">
+                    <span class="icon-box">🌪️</span>
+                    <strong>Mixed Round</strong>
+                </div>
+            </div>
+
+            <h3 style="margin-top:2.5rem;">Difficulty Level</h3>
+            <div style="display:flex; gap:1rem; margin-top:1rem;">
+                <button class="btn btn-outline diff-opt active" data-lvl="beginner" style="flex:1">Beginner</button>
+                <button class="btn btn-outline diff-opt" data-lvl="intermediate" style="flex:1">Intermediate</button>
+                <button class="btn btn-outline diff-opt" data-lvl="advanced" style="flex:1">Advanced</button>
+            </div>
+
+            <button id="launchBtn" class="btn btn-primary" style="width:100%; margin-top:3rem; padding:1.25rem; font-size:1.15rem; font-weight:800; border-radius:var(--radius-xl);">
+                Start 10-Question Session
+            </button>
+        </div>
+
+        <!-- 💬 Step 3, 4, 5: The Interview -->
+        <div id="interviewArea" class="interview-container">
+            <div class="chat-panel">
+                <div class="chat-header">
+                    <div class="progress-indicator">
+                        <span style="font-weight:700; font-size:0.875rem;">Question <span id="qCurrent">1</span>/10</span>
+                        <div class="progress-track">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem">
+                        <div class="pulse-icon" style="width:8px; height:8px; background:var(--success); border-radius:50%"></div>
+                        <span style="font-size:0.75rem; font-weight:800; color:var(--text-muted)">SARAH LIVE</span>
+                    </div>
+                </div>
+
+                <div class="chat-scroll" id="chatWindow">
+                    <!-- Messages will be injected here -->
+                </div>
+
+                <div class="chat-input-area">
+                    <textarea id="userInput" class="input-box" placeholder="Explain your answer in detail..." rows="1"></textarea>
+                    <button id="submitAnsBtn" class="btn btn-primary" style="padding:0 1.75rem; height:54px;">Send</button>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <div class="mini-card">
+                    <h5 class="muted mb-2">SESSION TIMER</h5>
+                    <div class="timer-val" id="clock">15:00</div>
+                </div>
+
+                <div class="mini-card">
+                    <h5>Live Evaluation</h5>
+                    <div style="margin-top:1.5rem">
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:700; margin-bottom:0.5rem">
+                            <span>TECHNICAL ACCURACY</span>
+                            <span id="accPct">0%</span>
+                        </div>
+                        <div style="height:6px; background:var(--border-light); border-radius:3px;">
+                            <div id="accFill" style="height:100%; width:0%; background:var(--brand-primary); transition:0.3s"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top:1.25rem">
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:700; margin-bottom:0.5rem">
+                            <span>COMMUNICATION</span>
+                            <span id="commPct">0%</span>
+                        </div>
+                        <div style="height:6px; background:var(--border-light); border-radius:3px;">
+                            <div id="commFill" style="height:100%; width:0%; background:var(--success); transition:0.3s"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mini-card" style="background:var(--accent-soft); border-color:var(--brand-primary)">
+                    <p style="font-size:0.875rem; line-height:1.5; margin:0">
+                        <strong>Pro Tip:</strong> Use the <strong>STAR</strong> method (Situation, Task, Action, Result) for behavioral or experience-based questions.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <!-- 📊 Results & Review Panel -->
+        <div id="resultArea" class="review-panel">
+            <div class="setup-card" style="text-align:center; margin-bottom:2rem;">
+                <h1 style="font-size:3rem; font-weight:900;">Evaluation <span style="color:var(--brand-primary)">Report</span></h1>
+                <div style="display:flex; justify-content:center; gap:3rem; margin:2.5rem 0;">
+                    <div>
+                        <div style="font-size:3rem; font-weight:800; color:var(--brand-primary)" id="finalScore">0</div>
+                        <span class="muted">Overall Score</span>
+                    </div>
+                    <div>
+                        <div style="font-size:3rem; font-weight:800; color:var(--success)" id="correctCount">0</div>
+                        <span class="muted">Correct</span>
+                    </div>
+                    <div>
+                        <div style="font-size:3rem; font-weight:800; color:var(--danger)" id="wrongCount">0</div>
+                        <span class="muted">Incorrect</span>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="margin-bottom:1.5rem">Question-by-Question Review</h2>
+            <div id="reviewContainer">
+                <!-- Review items injected here -->
+            </div>
+
+            <div class="setup-card" style="margin-top:3rem;">
+                <h3>Learning Recommendations</h3>
+                <div id="learnFeedback" style="display:grid; grid-template-columns: 1fr 1fr; gap:2rem; margin-top:1.5rem;">
+                    <div class="report-section">
+                        <h4 style="color:var(--danger)">Weak Topics</h4>
+                        <ul id="weakList" style="padding-left:1.2rem; line-height:2"></ul>
+                    </div>
+                    <div class="report-section">
+                        <h4 style="color:var(--success)">Topics to Master</h4>
+                        <ul id="masterList" style="padding-left:1.2rem; line-height:2"></ul>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:3rem">
+                    <button class="btn btn-primary" onclick="location.reload()">New Mock Interview</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="site-footer"></footer>
+
+    <script>
+        // ── Enhanced Question Bank Database ──
+        const questionBank = {
+            manual: {
+                beginner: [
+                    { q: "What is the difference between Severity and Priority?", ans: "Severity is impact; Priority is urgency.", keywords: ["impact", "urgency", "system", "business"], exp: "Severity describes the bug's impact on functionality, while Priority defines how soon it must be fixed.", hinglish: "Severity system impact dikhati hai, Priority business urgency." },
+                    { q: "Explain the STLC (Software Testing Life Cycle) phases.", ans: "Requirement, Planning, Design, Execution, Closure.", keywords: ["requirement", "planning", "design", "execution", "closure"], exp: "STLC follows specific phases from requirement analysis to test closure.", hinglish: "STLC testing ke step-by-step phases ko kehte hain." },
+                    { q: "What is Smoke Testing?", ans: "Basic health check of a build.", keywords: ["smoke", "health", "critical", "basic"], exp: "Smoke testing verify if the critical functionalities of the software work.", hinglish: "Smoke testing build ki basic stability check karne ke liye hoti hai." },
+                    { q: "What is a bug leak vs bug release?", ans: "Leak is missed by QA; Release is known bug shipped.", keywords: ["missed", "shipped", "leak", "release"], exp: "Bug leak is found by customers; bug release is intentionally shipped.", hinglish: "Leak matlab jo QA ne miss kiya, Release matlab jaan kar bheja gaya." },
+                    { q: "What is a Test Plan?", ans: "Document describing scope and strategy.", keywords: ["document", "scope", "strategy", "resource"], exp: "A Test Plan outlines the testing approach, resources, and schedule.", hinglish: "Test Plan ek blueprint hai jo bataata hai testing kaise hogi." },
+                    { q: "What is the difference between Alpha and Beta testing?", ans: "Alpha is internal; Beta is at client site.", keywords: ["internal", "client", "alpha", "beta"], exp: "Alpha is done by devs/QA; Beta is done by real users.", hinglish: "Alpha company ke andar hota hai, Beta users ke through." },
+                    { q: "Explain Boundary Value Analysis (BVA).", ans: "Testing at edges of input ranges.", keywords: ["boundary", "edge", "limit", "range"], exp: "BVA focuses on values at the boundaries of equivalence classes.", hinglish: "BVA range ke kinaron (edges) pe bugs dhoondne ke liye hota hai." },
+                    { q: "What is the difference between Static and Dynamic testing?", ans: "Static is without execution; Dynamic needs execution.", keywords: ["static", "dynamic", "execution", "review"], exp: "Static includes reviews/inspections; Dynamic involves running code.", hinglish: "Static bina code chalaye hota hai, Dynamic code chala kar." },
+                    { q: "Define Regression testing.", ans: "Retesting to ensure new changes didn't break old stuff.", keywords: ["retest", "impact", "old", "new"], exp: "Regression ensures that recent changes haven't affected existing features.", hinglish: "Regression purane features ki stability check karna hai badlav ke baad." },
+                    { q: "What is Positive and Negative testing?", ans: "Positive follows rules; Negative breaks them.", keywords: ["valid", "invalid", "rules", "break"], exp: "Positive testing uses valid input; Negative testing uses invalid ones.", hinglish: "Positive valid data ke saath, Negative invalid data ke saath." }
+                ],
+                intermediate: [
+                    { q: "What is the difference between Verification and Validation?", ans: "Verification is 'doing it right'; Validation is 'doing the right thing'.", keywords: ["verification", "validation", "right", "process", "product"], exp: "Verification checks the process; Validation checks the final product.", hinglish: "Verification process check karta hai, Validation product." },
+                    { q: "Explain Equivalence Partitioning.", ans: "Dividing data into groups with similar behavior.", keywords: ["group", "partition", "behavior", "valid", "invalid"], exp: "It reduces test cases by selecting one representative from each group.", hinglish: "Groups banana taaki testing kam aur asardaar ho sake." },
+                    { q: "How do you handle a situation where a developer says 'it's not a bug'?", ans: "Provide proof, re-explain requirement, discuss with Lead.", keywords: ["proof", "requirement", "lead", "developer"], exp: "Objectively show logs, screenshots, and requirement docs to support your claim.", hinglish: "Proof aur requirements dikha kar developer ko convince karein." },
+                    { q: "What is a Traceability Matrix (RTM)?", ans: "Maps requirements to test cases.", keywords: ["requirement", "traceability", "mapping", "case"], exp: "RTM ensures 100% requirement coverage by linking each to a test.", hinglish: "RTM check karta hai ki har requirement test ho rahi hai ya nahi." },
+                    { q: "What is the purpose of Ad-hoc testing?", ans: "Unplanned testing to find bugs missed by test cases.", keywords: ["unplanned", "random", "missed", "adhoc"], exp: "Ad-hoc is intuitive testing performed without formal documentation.", hinglish: "Ad-hoc matlab bina kisi plan ke random testing karna." },
+                    { q: "Explain the difference between Retesting and Regression.", ans: "Retesting is for fixed bug; Regression is for side-effects.", keywords: ["retesting", "regression", "side-effect", "fixed"], exp: "Retesting checks the specific fix; Regression checks the impact elsewhere.", hinglish: "Retest bug fix ke liye, Regression side-effects ke liye." },
+                    { q: "What are the contents of a good Test Case?", ans: "ID, Title, Steps, Expected, Actual, Status.", keywords: ["id", "steps", "expected", "actual", "status"], exp: "A test case must be clear, reusable, and have a clear expected result.", hinglish: "Sahi Test Case mein steps, expected result aur priority hoti hai." },
+                    { q: "How do you prioritize test cases?", ans: "Based on risk and business impact.", keywords: ["risk", "business", "impact", "priority"], exp: "Critical features and high-risk areas are tested first.", hinglish: "Risk aur business use ke hisab se priority set ki jaati hai." },
+                    { q: "What is the Bug Life Cycle?", ans: "New, Open, Fixed, Retest, Closed.", keywords: ["new", "open", "fixed", "retest", "closed"], exp: "It's the journey of a bug from discovery to closure.", hinglish: "Bug dhoondne se lekar band hone tak ka pura rasta." },
+                    { q: "What is the difference between Functional and Non-Functional testing?", ans: "Functional is 'what'; Non-functional is 'how'.", keywords: ["functional", "non-functional", "what", "how", "performance"], exp: "Functional checks features; Non-functional checks performance/security.", hinglish: "Functional features check karta hai, Non-functional performance." }
+                ],
+                advanced: [
+                    { q: "How do you perform Risk-Based Testing?", ans: "Identify risks, assess impact/probability, prioritize.", keywords: ["risk", "impact", "probability", "prioritize"], exp: "Focus on high-risk areas to optimize testing with limited time.", hinglish: "Zahan risk zyada hai wahan pehle test karna Risk-based testing hai." },
+                    { q: "What is Mutation Testing?", ans: "Modifying code to check test case quality.", keywords: ["mutation", "quality", "code", "coverage"], exp: "Small changes (mutants) are made to code to see if tests fail.", hinglish: "Code mein chote badlav karke dekhna ki tests unhe pakad pa rahe hain ya nahi." },
+                    { q: "Explain the role of a Test Architect.", ans: "Designing framework, strategy, and infrastructure.", keywords: ["architect", "strategy", "framework", "infrastructure"], exp: "They define the high-level testing ecosystem for the organization.", hinglish: "Test Architect pura testing system aur framework design karta hai." },
+                    { q: "How would you test a microservices architecture?", ans: "API tests, Contract tests, Integration tests.", keywords: ["api", "contract", "integration", "microservice"], exp: "Test individual services and their interactions via mocks/stubs.", hinglish: "Har service ko separately aur unke coordination ko test karna." },
+                    { q: "What is Latency vs Throughput in Performance Testing?", ans: "Latency is delay; Throughput is transactions per second.", keywords: ["latency", "throughput", "delay", "load"], exp: "Latency measures time delay; Throughput measures processing capacity.", hinglish: "Latency matlab kitni deri hai, Throughput matlab kitna load handle kiya." },
+                    { q: "Describe the 'Testing Pyramid' strategy.", ans: "Unit > Integration > UI tests.", keywords: ["pyramid", "unit", "integration", "ui"], exp: "More unit tests at bottom, fewer UI tests at the top.", hinglish: "Testing Pyramid kehta hai ki unit tests sabse zyada honi chahiye." },
+                    { q: "What is Orthogonal Array Testing (OATS)?", ans: "Statistical method for input combinations.", keywords: ["orthogonal", "array", "combination", "input"], exp: "It maximizes coverage with minimum input combinations.", hinglish: "Combinations ko kam karke maximum coverage paane ki technique." },
+                    { q: "How do you handle production defects?", ans: "Root cause analysis, re-test, regression, lessons learned.", keywords: ["root", "cause", "analysis", "production", "defect"], exp: "Investigate why it was missed and update the test suite accordingly.", hinglish: "Dekhna ki bug kyu miss hua aur tests ko update karna." },
+                    { q: "What is the difference between Scalability and Reliability testing?", ans: "Scalability is growth; Reliability is consistency over time.", keywords: ["scalability", "reliability", "consistency", "growth"], exp: "Scalability checks growth capacity; Reliability checks steady state.", hinglish: "Scalability badhte load ke liye hai, Reliability lagatar chalne ke liye." },
+                    { q: "Explain CI/CD role in modern QA.", ans: "Automating builds, tests, and deployments.", keywords: ["cicd", "automation", "pipeline", "deployment"], exp: "Ensures fast feedback and high-quality software delivery.", hinglish: "Software jaldi aur bina bug ke release karne ka automatic process." }
+                ]
+            },
+            automation: {
+                beginner: [
+                    { q: "What are the main components of Selenium?", ans: "IDE, Grid, WebDriver.", keywords: ["ide", "grid", "webdriver"], exp: "WebDriver is the core tool used for browser automation.", hinglish: "Selenium ke main parts WebDriver, Grid aur IDE hote hain." },
+                    { q: "How do you identify elements in Selenium?", ans: "Using locators like XPath, CSS, ID, Name.", keywords: ["locator", "xpath", "css", "id", "name"], exp: "Locators are used to find elements on a web page.", hinglish: "Website ke components dhoondne ke liye ID ya XPath use karte hain." },
+                    { q: "What is the difference between findElement and findElements?", ans: "One returns single element; other returns list.", keywords: ["single", "list", "returns"], exp: "findElement throws NoSuchElementException; findElements returns empty list.", hinglish: "Element ek cheez ke liye, Elements list ke liye." },
+                    { q: "How do you handle dropdowns in Selenium?", ans: "Using the Select class.", keywords: ["select", "dropdown", "class"], exp: "The Select class provides methods to select options by value or index.", hinglish: "Select class use karke hum options select karte hain." },
+                    { q: "What is the use of implicit wait?", ans: "Global wait for elements present in DOM.", keywords: ["implicit", "wait", "global", "dom"], exp: "It tells WebDriver to poll the DOM for a certain time before failing.", hinglish: "Implicit wait pure session ke liye element dhoondne mein help karta hai." },
+                    { q: "Explain absolute vs relative XPath.", ans: "Absolute starts from root; Relative starts from anywhere.", keywords: ["absolute", "relative", "root", "xpath"], exp: "Relative XPath is preferred as it's more stable.", hinglish: "Relative XPath behtar hota hai kyunki wo jaldi break nahi hota." },
+                    { q: "What is the default port for Selenium Hub?", ans: "4444.", keywords: ["4444", "port", "hub"], exp: "Selenium Grid hub usually runs on port 4444.", hinglish: "Selenium Hub ka standard port number 4444 hai." },
+                    { q: "How do you refresh a page in Selenium?", ans: "navigate().refresh() or sending keys.", keywords: ["refresh", "navigate"], exp: "The navigate().refresh() command reloads the current page.", hinglish: "Page reload karne ke liye refresh command use hota hai." },
+                    { q: "What is the purpose of Actions class?", ans: "Handling complex user gestures (hover, drag).", keywords: ["actions", "gesture", "hover", "drag"], exp: "Actions class handles advanced keyboard and mouse interaction.", hinglish: "Mouse hover ya drag-drop ke liye Actions class zaroori hai." },
+                    { q: "What is TestNG?", ans: "Test framework for Java.", keywords: ["testng", "framework", "java", "testing"], exp: "Used for annotations, parallel execution, and reporting.", hinglish: "TestNG testing organize aur manage karne ka ek framework hai." }
+                ],
+                intermediate: [
+                    { q: "What is Page Object Model (POM)?", ans: "Design pattern for element repositories.", keywords: ["pom", "page", "object", "model", "design"], exp: "It separates test logic from UI elements for better maintenance.", hinglish: "Code ko clean rakhne ke liye logic aur UI elements ko alag karna." },
+                    { q: "How do you handle dynamic WebTables?", ans: "Iterate through rows/cols using relative XPaths.", keywords: ["webtable", "dynamic", "rows", "column", "xpath"], exp: "Find total rows, then loop and match text in target cells.", hinglish: "Rows aur columns pe loop chala kar data dhoondna." },
+                    { q: "Explain Explicit Wait in Selenium.", ans: "Wait for a specific condition on an element.", keywords: ["explicit", "wait", "condition", "expected"], exp: "Wait until visibility, clickability, or presence of an element.", hinglish: "Kisi khas element ke ready hone ka wait karna." },
+                    { q: "How do you handle multiple windows in Selenium?", ans: "getWindowHandles() and switchTo().", keywords: ["windows", "handles", "switch", "iterator"], exp: "Use unique window IDs to switch focus between tabs.", hinglish: "Alag-alag tabs ke beech switch karne ke liye Handles use hote hain." },
+                    { q: "What is JavascriptExecutor and when is it used?", ans: "Execute JS code directly in browser.", keywords: ["javascript", "executor", "scroll", "click"], exp: "Used for scrolling or clicking when WebDriver fails.", hinglish: "Jab Selenium fail ho jaye toh direct JavaScript use karna." },
+                    { q: "How do you read data from Excel in Selenium?", ans: "Using Apache POI library.", keywords: ["poi", "excel", "reading", "workbook"], exp: "Open workbook, get sheet, then read rows/cells.", hinglish: "Data-driven testing ke liye Apache POI library use hoti hai." },
+                    { q: "Explain Cross Browser Testing.", ans: "Testing app on different browsers (Chrome, Firefox).", keywords: ["cross", "browser", "chrome", "firefox", "safari"], exp: "Ensures the application works consistently across platforms.", hinglish: "Alag browser pe website sahi chal rahi hai ya nahi, check karna." },
+                    { q: "What is a Data-Driven Framework?", ans: "Separating test data from scripts.", keywords: ["data", "driven", "scripts", "excel", "csv"], exp: "Run the same script multiple times with different inputs from a file.", hinglish: "Ek hi script ko alag data ke saath baar-baar chalana." },
+                    { q: "How do you handle popups/alerts in Selenium?", ans: "switchTo().alert().", keywords: ["alert", "popup", "switch", "accept", "dismiss"], exp: "Use accept() or dismiss() to close browser alerts.", hinglish: "Browser ke popups ko accept ya cancel karna." },
+                    { q: "What is the difference between @BeforeMethod and @BeforeClass in TestNG?", ans: "Method runs before every test; Class runs once before all tests.", keywords: ["method", "class", "before", "testng"], exp: "@BeforeClass is for overall setup; @BeforeMethod is for individual state.", hinglish: "@BeforeMethod har test se pehle, Class sirf ek baar." }
+                ],
+                advanced: [
+                    { q: "Explain Selenium Grid architecture.", ans: "Hub and Node setup for distributed testing.", keywords: ["hub", "node", "grid", "distributed", "architecture"], exp: "Hub controls nodes which run tests in parallel across platforms.", hinglish: "Hub dimaag hai jo alag nodes (browsers) ko control karta hai." },
+                    { q: "How do you integrate automation with CI/CD Jenkins?", ans: "Using build triggers and shell commands.", keywords: ["jenkins", "pipeline", "trigger", "cicd", "shell"], exp: "Automate test execution whenever code is pushed to Git.", hinglish: "Jenkins mein automated job banana taaki tests apne aap chalein." },
+                    { q: "Tell me about Page Factory in Selenium.", ans: "Extension of POM with @FindBy annotation.", keywords: ["factory", "findby", "init", "lazy"], exp: "Initializes elements lazily using initElements method.", hinglish: "@FindBy use karke POM ko aur advanced banana." },
+                    { q: "How do you handle flakiness in automation suites?", ans: "Better waits, stable locators, and environment check.", keywords: ["flakiness", "waits", "stable", "locator", "retry"], exp: "Use custom retry logic and ensure elements are stable before action.", hinglish: "Tests ko fail hone se rokne ke liye sahi waits aur logic." },
+                    { q: "Explain the Singleton design pattern in frameworks.", ans: "Ensures only one instance of WebDriver exists.", keywords: ["singleton", "instance", "webdriver", "pattern"], exp: "Useful for managing browser drivers across multiple test classes.", hinglish: "Pure framework mein sirf ek hi browser controller rakha jata hai." },
+                    { q: "What is Docker and how is it used in Selenium?", ans: "Containerization for consistent test environments.", keywords: ["docker", "container", "environment", "scaling"], exp: "Spin up browsers in lean containers instead of VMs.", hinglish: "Alag environment setup karne ke liye Docker containers use hote hain." },
+                    { q: "How do you automate Shadow DOM elements?", ans: "Using JS executor to find host and expand shadow root.", keywords: ["shadow", "dom", "root", "host", "javascript"], exp: "Standard locators don't work inside shadow roots; must use JS path.", hinglish: "Shadow DOM ke elements ko normal locators se nahi dhoonda ja sakta." },
+                    { q: "What are Listeners in TestNG?", ans: "Interfaces that monitor test events.", keywords: ["listeners", "testng", "events", "report", "failure"], exp: "Used for custom logging, screenshots on failure, and reports.", hinglish: "Tests ke status ko track karne ke liye tools." },
+                    { q: "Explain the Hybrid Framework concept.", ans: "Combination of Data-driven and Keyword-driven.", keywords: ["hybrid", "keyword", "data", "driven", "combination"], exp: "Leverages best of both strategies for scale and readability.", hinglish: "Data aur keywords dono ko mila kar framework banana." },
+                    { q: "How do you handle CAPTCHA in automation?", ans: "Ask devs for bypass, use service, or manual input.", keywords: ["captcha", "bypass", "dev", "manual"], exp: "Automation is not meant for CAPTCHA; use sandbox or test keys.", hinglish: "Captcha handling testing ka part nahi hai, ise bypass karna padta hai." }
+                ]
+            },
+            api: {
+                beginner: [
+                    { q: "What is an API?", ans: "Interface for software components to communicate.", keywords: ["interface", "communication", "software", "api"], exp: "Application Programming Interface allows two systems to talk.", hinglish: "Do apps ke beech baat-cheet ka tarika." },
+                    { q: "Common HTTP methods?", ans: "GET, POST, PUT, DELETE.", keywords: ["get", "post", "put", "delete"], exp: "GET fetches, POST creates, PUT updates, DELETE removes data.", hinglish: "Data lene, banane ya badalne ke standard tarike." },
+                    { q: "Meaning of 200 vs 404 status code?", ans: "200 is Success; 404 is Not Found.", keywords: ["200", "404", "success", "not found"], exp: "200 indicates the request worked; 404 means the resource is missing.", hinglish: "200 matlab sab theek hai, 404 matlab kuch nahi mila." },
+                    { q: "What is JSON?", ans: "JavaScript Object Notation file format.", keywords: ["json", "format", "data", "javascript"], exp: "Lightweight data format used for API communication.", hinglish: "Data lene dene ka ek simple format." },
+                    { q: "What is the difference between GET and POST?", ans: "GET fetches data; POST sends/creates data.", keywords: ["get", "post", "fetch", "send"], exp: "GET parameters are in URL; POST parameters are in body.", hinglish: "GET data maangne ke liye, POST data bhejne ke liye." },
+                    { q: "What is a URI?", ans: "Uniform Resource Identifier.", keywords: ["uri", "resource", "identifier"], exp: "A unique address for an API resource.", hinglish: "API resource ka ek unique pata (address)." },
+                    { q: "What is Postman?", ans: "API client for testing.", keywords: ["postman", "client", "testing", "tool"], exp: "A GUI based tool to test REST and SOAP APIs manually.", hinglish: "API test karne ka sabse famous tool." },
+                    { q: "What is an API payload?", ans: "Data sent in the request body.", keywords: ["payload", "data", "body"], exp: "The actual data being transferred to the server.", hinglish: "Wo data jo hum network ke through bhejte hain." },
+                    { q: "Common API formats?", ans: "JSON, XML.", keywords: ["json", "xml", "format"], exp: "JSON is preferred today for its simplicity.", hinglish: "Data bhejne ke do main tarike JSON aur XML." },
+                    { q: "What is the 500 status code?", ans: "Internal Server Error.", keywords: ["500", "server", "error", "internal"], exp: "Something went wrong on the server side.", hinglish: "Server ki side se koi badi galti." }
+                ],
+                intermediate: [
+                    { q: "Difference between SOAP and REST?", ans: "SOAP is protocol; REST is architectural style.", keywords: ["soap", "rest", "protocol", "architecture", "style"], exp: "REST uses HTTP, while SOAP can use other protocols and is XML-based.", hinglish: "REST fast aur flexible hai, SOAP secure aur rigid." },
+                    { q: "What is API Chaining?", ans: "Using output of one API as input for another.", keywords: ["chaining", "output", "input", "postman"], exp: "Extract values using scripts and pass them to subsequent requests.", hinglish: "Ek API ke result ko doosre API mein use karna." },
+                    { q: "Explain Authentication vs Authorization.", ans: "Auth is identity; AuthZ is permissions.", keywords: ["identity", "permission", "authentication", "authorization"], exp: "Auth checks who you are; AuthZ checks what you can do.", hinglish: "Authentication matlab 'Kaun ho?', Authorization matlab 'Kya kar sakte ho?'" },
+                    { q: "How do you test API performance?", ans: "Checking response time and throughput under load.", keywords: ["performance", "response", "time", "load", "jmeter"], exp: "Measure how fast the API responds with 1000s of concurrent users.", hinglish: "Load padne pe API kitni fast hai, check karna." },
+                    { q: "What are Environment Variables in Postman?", ans: "Storing values for reuse across collections.", keywords: ["environment", "variables", "postman", "reuse"], exp: "Useful for switching between Dev, QA, and Prod URLs easily.", hinglish: "Alag-alag server URLs ko manage karne ke liye variables." },
+                    { q: "What is JSON Schema Validation?", ans: "Ensuring the API response structure is correct.", keywords: ["schema", "validation", "structure", "data", "type"], exp: "Verify data types, required fields, and nested objects in response.", hinglish: "Response ka structure (columns, types) check karna." },
+                    { q: "Difference between Query and Path parameters?", ans: "Path identifies resource; Query filters it.", keywords: ["path", "query", "parameter", "filter"], exp: "Path part of URL (/users/1); Query follows ? (users?id=1).", hinglish: "Path URL ka part hota hai, Query filter ke liye." },
+                    { q: "What is a JWT?", ans: "JSON Web Token for security.", keywords: ["jwt", "token", "security", "claims"], exp: "Compact, URL-safe means of representing claims between two parties.", hinglish: "Security ke liye use hone wala ek digital token." },
+                    { q: "How do you handle API throttling?", ans: "Implement retries or wait for cooldown.", keywords: ["throttling", "limit", "rate", "retry"], exp: "Servers limit the number of requests to prevent abuse.", hinglish: "Zyada requests bhejne pe server limit laga deta hai." },
+                    { q: "What is a Mock API?", ans: "Simulated API response for testing.", keywords: ["mock", "simulation", "response", "stubs"], exp: "Used when the actual API is under development or unavailable.", hinglish: "Asli API na hone pe nakli response se kaam chalana." }
+                ],
+                advanced: [/* Add Advanced API as needed... */]
+            },
+            sql: {
+                beginner: [
+                    { q: "What is the difference between DELETE and TRUNCATE?", ans: "DELETE is DML, row-by-row with rollback; TRUNCATE is DDL, resets table without log.", keywords: ["dml", "ddl", "rollback", "log", "where"], exp: "DELETE removes rows matching a condition and can be rolled back. TRUNCATE removes all rows and resets indices.", hinglish: "DELETE row-by-row hatata hai aur rollback hota hai, TRUNCATE pura table reset karta hai bina log ke." },
+                    { q: "What are Joins in SQL and name their types?", ans: "Joins combine rows; Inner, Left, Right, Full.", keywords: ["inner", "left", "right", "full", "combine"], exp: "Joins link tables based on common columns. Inner gives intersection, Left gives all from left table.", hinglish: "Joins do tables ko jodne ke liye hote hain. Main types hain Inner, Left, Right aur Full join." },
+                    { q: "What is a Primary Key?", ans: "Unique identifier for each record in a table.", keywords: ["unique", "not null", "identifier", "one"], exp: "A Primary Key must be unique and cannot contain null values. Only one PK per table.", hinglish: "Primary Key har record ko uniquely dhoondne ke liye hoti hai, ye null nahi ho sakti." },
+                    { q: "What is the difference between WHERE and HAVING?", ans: "WHERE filters rows before aggregation; HAVING filters groups after.", keywords: ["filter", "aggregation", "group", "row"], exp: "WHERE is used with SELECT/UPDATE. HAVING is specifically for grouped data (GROUP BY).", hinglish: "WHERE rows ke liye hota hai, HAVING grouped data ke liye aggregation ke baad." },
+                    { q: "How to find duplicate records in a table?", ans: "Use GROUP BY and HAVING count(*) > 1.", keywords: ["group by", "having", "count", "duplicate"], exp: "Group the data by specific columns and check where the count is more than one.", hinglish: "Columns ko GROUP BY karo aur HAVING count > 1 laga kar duplicates mil jayenge." },
+                    { q: "What is a Foreign Key?", ans: "A column that links to a Primary Key of another table.", keywords: ["link", "relationship", "integrity", "another"], exp: "It maintains referential integrity by ensuring data exists in the parent table.", hinglish: "Foreign Key doosri table ki Primary Key se judi hoti hai relationships banane ke liye." },
+                    { q: "What is the use of the DISTINCT keyword?", ans: "To return unique values only.", keywords: ["unique", "duplicate", "remove"], exp: "DISTINCT removes duplicate rows from the result set of a query.", hinglish: "Dublicate records hata kar sirf unique dikhane ke liye DISTINCT use hota hai." },
+                    { q: "How do you sort data in SQL?", ans: "ORDER BY clause (ASC or DESC).", keywords: ["order by", "asc", "desc", "sort"], exp: "ORDER BY is used to sort results in ascending (default) or descending order.", hinglish: "Data ko sort karne ke liye hum ORDER BY use karte hain." },
+                    { q: "What are DDL and DML commands?", ans: "DDL (Structure): CREATE, ALTER; DML (Data): INSERT, UPDATE.", keywords: ["structure", "data", "create", "insert"], exp: "DDL changes table schema; DML handles the actual data inside.", hinglish: "DDL structure ke liye (CREATE, DROP), DML data ke liye (INSERT, UPDATE)." },
+                    { q: "Second highest salary query?", ans: "SELECT MAX(salary) FROM Emp WHERE salary < (SELECT MAX(salary) FROM Emp).", keywords: ["max", "subquery", "salary"], exp: "Using a subquery to find the highest salary that is less than the overall maximum.", hinglish: "Ek subquery use karke hum maximum se choti max salary nikalte hain." }
+                ],
+                intermediate: [
+                    { q: "What is Database Normalization?", ans: "Organizing data to reduce redundancy (1NF, 2NF, 3NF).", keywords: ["redundancy", "normalization", "nf", "organize"], exp: "Normalization divides large tables into smaller ones to improve data integrity.", hinglish: "Data redundancy kam karne ke liye tables ko organize karna Normalization hai." },
+                    { q: "What is the difference between UNION and UNION ALL?", ans: "UNION removes duplicates; UNION ALL keeps all.", keywords: ["union", "duplicate", "all", "performance"], exp: "UNION ALL is faster because it doesn't perform a distinct sort operation.", hinglish: "UNION duplicates hata deta hai, UNION ALL sab kuch dikhata hai aur fast hai." },
+                    { q: "What are Subqueries? Explain types.", ans: "Query inside a query; Correlated and Non-correlated.", keywords: ["nested", "correlated", "non-correlated"], exp: "A subquery can be used in SELECT, WHERE, or FROM clauses. Correlated depends on outer query.", hinglish: "Ek query ke andar doosri query. Correlated outer query pe depend karti hai." },
+                    { q: "What is an Index and its types?", ans: "Performance tool; Clustered and Non-Clustered.", keywords: ["index", "performance", "clustered", "non-clustered"], exp: "Indexes speed up data retrieval. Only one clustered index per table.", hinglish: "Data jaldi load karne ke liye Index banta hai, jaise book ki index page." },
+                    { q: "How to use the LIKE operator?", ans: "Pattern matching with % and _.", keywords: ["pattern", "match", "wildcard", "like"], exp: "% matches any sequence, _ matches a single character.", hinglish: "Pattern dhoondne ke liye % aur _ wildcards use kiye jate hain." },
+                    { q: "What is a View and its benefit?", ans: "Virtual table; security and complex query simplification.", keywords: ["virtual", "security", "simplicity"], exp: "Views don't store data but provide a window to query data securely.", hinglish: "View ek virtual table hai jo complex queries ko simple banata hai." },
+                    { q: "What is an Inner Join vs a Cross Join?", ans: "Inner matches on key; Cross is Cartesian product (all to all).", keywords: ["n x m", "match", "cross", "cartesian"], exp: "Inner Join needs a condition; Cross Join pairs every row of A with every row of B.", hinglish: "Inner join condition pe kaam karta hai, Cross join har record ko pair kar deta hai." },
+                    { q: "Explain ACID properties.", ans: "Atomicity, Consistency, Isolation, Durability.", keywords: ["acid", "transaction", "atomicity", "consistency"], exp: "Rules that guarantee database transactions are processed reliably.", hinglish: "Database transactions secure aur reliable banane ke rules ko ACID kehte hain." },
+                    { q: "What is the GROUP BY clause?", ans: "Grouping rows with same values into summary rows.", keywords: ["group", "aggregate", "summary", "sum", "avg"], exp: "Often used with aggregate functions (COUNT, MAX, SUM) to group result sets.", hinglish: "Same values waale records ko ek group mein daal kar calculations karne ke liye." },
+                    { q: "What is the difference between CHAR and VARCHAR?", ans: "CHAR is fixed length; VARCHAR is variable length.", keywords: ["fixed", "variable", "length", "space"], exp: "CHAR pads with spaces; VARCHAR only stores the actual string length plus overhead.", hinglish: "CHAR fixed space leta hai, VARCHAR jitni zaroorat hai utni hi space leta hai." }
+                ]
+            },
+            ai: {
+                beginner: [
+                    { q: "How does AI help in Software Testing?", ans: "Test generation, maintenance, and visual testing.", keywords: ["generation", "maintenance", "visual", "productivity"], exp: "AI automates repetitive tasks like updating locators and generating test data.", hinglish: "AI test cases likhne aur locators ko automatically theek karne mein help karta hai." },
+                    { q: "What is 'Self-Healing' in Automation?", ans: "Using AI to fix broken locators in real-time.", keywords: ["self-healing", "locator", "broken", "ai"], exp: "When UI changes, AI identifies the new element structure and adjusts the test scripts without failure.", hinglish: "Agar website ka code badle toh AI khud hi locators ko update kar deta hai." },
+                    { q: "What is Visual AI Testing?", ans: "Comparing UI snapshots using image processing AI.", keywords: ["visual", "snapshot", "pixel", "comparison"], exp: "It detects visual bugs like layout shifts and color changes that traditional code can't see.", hinglish: "Screenshot ko compare karke design bugs dhoondna Visual AI testing hai." },
+                    { q: "Can AI replace manual testers?", ans: "No, it augments them by handling repetitive work.", keywords: ["augment", "manual", "collaboration", "human"], exp: "AI lacks human intuition and context; it is a tool to help testers work faster.", hinglish: "Nahi, AI sirf ek help hai, human dimaag aur logic testing mein zaroori rahega." },
+                    { q: "What is AI Test Case Generation?", ans: "Using ML to write test steps based on requirements.", keywords: ["generation", "ml", "steps", "requirement"], exp: "Algorithms analyze documents to create relevant test paths automatically.", hinglish: "Requirements ko padh kar AI apne aap test steps generate kar sakta hai." },
+                    { q: "Name some AI testing tools.", ans: "Applitools, Testim, Mabl, Test.ai.", keywords: ["applitools", "testim", "mabl", "tools"], exp: "These tools use ML for visual checks and self-healing features.", hinglish: "Aise tools jo AI use karke testing ko fast aur safe banate hain." },
+                    { q: "How can ChatGPT help a QA engineer?", ans: "Test scripts, data generation, and bug analysis.", keywords: ["scripts", "data", "analysis", "prompt"], exp: "QA can use prompts to write Selenium code or create complex JSON test data.", hinglish: "ChatGPT se hum fat-a-fat scripts likhwa sakte hain aur test data bana sakte hain." },
+                    { q: "What is Predictive Analytics in QA?", ans: "Using past data to predict where bugs are likely to occur.", keywords: ["predictive", "bugs", "historical", "trend"], exp: "AI analyzes old bug patterns to tell which modules need more focus.", hinglish: "Purana data dekh kar AI bata sakta hai ki kahan bugs aane ke chances zyada hain." },
+                    { q: "What is AI Model Testing?", ans: "Checking the accuracy and fairness of an AI/ML model.", keywords: ["accuracy", "fairness", "model", "validation"], exp: "It involves testing the training data and output for bias and precision.", hinglish: "AI khud kaise kaam kar raha hai (accuracy aur bias), wo check karna." },
+                    { q: "What is the difference between AI and traditional automation?", ans: "Automation is rule-based; AI is learning-based.", keywords: ["rules", "learning", "dynamic", "static"], exp: "Automation follows fixed steps; AI adapts to changes and learns from data.", hinglish: "Traditional automation fix rules pe chalta hai, AI dimaag lagata hai aur seekhta hai." }
+                ],
+                intermediate: [
+                    { q: "How do you test a Non-Deterministic AI system?", ans: "Testing within confidence intervals; many iterations.", keywords: ["non-deterministic", "confidence", "interval", "iteration"], exp: "Since AI output varies, we test if results fall within an acceptable range multiple times.", hinglish: "AI ka result fix nahi hota, isliye hum check karte hain ki result limit ke andar ho." },
+                    { q: "What is Data Drift and how to test it?", ans: "Model quality drop over time due to changed real-world data.", keywords: ["drift", "quality", "training", "production"], exp: "Compare the distribution of real production data with training data to ensure consistency.", hinglish: "Jab waqt ke saath actual data badal jaye aur AI ki accuracy gir jaye, use drift kehte hain." },
+                    { q: "What is Explainable AI (XAI)?", ans: "AI that provides reasons for its decisions.", keywords: ["explainable", "transparent", "decision", "logic"], exp: "XAI ensures humans can understand why an AI model reached a specific conclusion.", hinglish: "Aisa AI jo bata sake ki usne ye result kyu diya (transparency)." },
+                    { q: "What is Fuzz Testing in AI models?", ans: "Sending random/malformed data to check model robustness.", keywords: ["fuzz", "robustness", "random", "security"], exp: "Helps identify edge cases where the model might crash or behave erratically.", hinglish: "Galat aur random data bhej kar dekhna ki AI pagal toh nahi ho raha." },
+                    { q: "Explain Visual Regression testing using AI.", ans: "AI ignoring minor pixel shifts to find real UI issues.", keywords: ["regression", "ui", "pixel", "shift"], exp: "AI models can distinguish between a deliberate change and a rendering error.", hinglish: "AI choti moti shifts ko ignore karke asli design bugs batata hai." }
+                ]
+            }
+        };
+
+        // Complete the Bank if missing items during runtime
+        function getDummy(cat, diff, idx) {
+            const genericQ = [
+                "How do you ensure test coverage?",
+                "What is your approach to bug reporting?",
+                "Explain the importance of soft skills in QA.",
+                "How do you handle tight deadlines?",
+                "What tools do you use for project management?",
+                "Explain the concept of 'Shift Left' testing.",
+                "How do you stay updated with latest testing trends?",
+                "What makes a 'Good' bug report?",
+                "Describe your favorite testing tool.",
+                "How do you handle team dependencies?"
+            ];
+            return {
+                q: genericQ[idx % 10],
+                ans: "Professional testing methodology.",
+                keywords: ["testing", "quality", "process"],
+                exp: "This is a key QA concept focusing on quality and process improvement.",
+                hinglish: "Yeh quality aur process behtar banane ka ek important tarika hai."
+            };
+        }
+
+        // ── State ──
+        let state = {
+            category: 'manual',
+            difficulty: 'beginner',
+            currentIdx: 0,
+            timer: 900,
+            interval: null,
+            questions: [],
+            history: [], // Stores { q, userAns, isCorrect, score, exp, hinglish, refAns }
+            stats: { acc: 0, comm: 0 },
+            externalBank: {
+                manual: [],
+                automation: [],
+                api: [],
+                sql: [],
+                ai: []
+            }
+        };
+
+        // ── External Content Extraction ──
+        async function loadExternalQuestions() {
+            try {
+                const response = await fetch('qa-testing.html');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                
+                const sections = {
+                    'general-qa': 'manual',
+                    'manual-testing': 'manual',
+                    'agile-methodology': 'manual',
+                    'automation-testing': 'automation',
+                    'cucumber-framework': 'automation',
+                    'mobile-testing': 'automation',
+                    'java-coding': 'automation',
+                    'java-programs': 'automation',
+                    'api-testing': 'api',
+                    'web-services': 'api',
+                    'sql-vulnerability': 'sql',
+                    'sql-queries': 'sql'
+                };
+
+                const details = doc.querySelectorAll('details');
+                details.forEach(detail => {
+                    const summary = detail.querySelector('summary');
+                    if (!summary) return;
+                    
+                    const qText = summary.innerText.replace(/^\d+\.\s*/, '').trim();
+                    const ansDiv = detail.querySelector('.answer');
+                    if (!ansDiv) return;
+
+                    // Extract content
+                    const fullText = ansDiv.innerText;
+                    const englishMatch = fullText.match(/English:\s*([\s\S]*?)(?=Hinglish:|$)/i);
+                    const hinglishMatch = fullText.match(/Hinglish:\s*([\s\S]*?)$/i);
+
+                    const exp = englishMatch ? englishMatch[1].trim() : "Technical expert explanation.";
+                    const hinglish = hinglishMatch ? hinglishMatch[1].trim() : "Common-sense Hinglish explanation.";
+
+                    // Find category by section
+                    let category = 'manual';
+                    const parentSection = detail.closest('h2[id], div[id]');
+                    if (parentSection && sections[parentSection.id]) {
+                        category = sections[parentSection.id];
+                    } else {
+                        // Better keyword guessing
+                        const qLower = qText.toLowerCase();
+                        if (qLower.includes('selenium') || qLower.includes('automation') || qLower.includes('script') || qLower.includes('locator') || qLower.includes('java')) category = 'automation';
+                        else if (qLower.includes('api') || qLower.includes('endpoint') || qLower.includes('postman') || qLower.includes('rest')) category = 'api';
+                        else if (qLower.includes('sql') || qLower.includes('join') || qLower.includes('query') || qLower.includes('database')) category = 'sql';
+                        else if (qLower.includes('ai') || qLower.includes('gpt') || qLower.includes('intelligence')) category = 'ai';
+                    }
+
+                    state.externalBank[category].push({
+                        q: qText,
+                        ans: exp.substring(0, 150) + (exp.length > 150 ? "..." : ""), 
+                        keywords: qText.toLowerCase().split(' ').filter(w => w.length > 3),
+                        exp: exp,
+                        hinglish: hinglish
+                    });
+                });
+                console.log("External questions loaded:", state.externalBank);
+            } catch (err) {
+                console.error("Failed to load external questions:", err);
+            }
+        }
+
+        // Initialize extraction
+        loadExternalQuestions();
+
+        // ── UI Handling ──
+        const setup = document.getElementById('setupArea');
+        const interview = document.getElementById('interviewArea');
+        const results = document.getElementById('resultArea');
+        const chatWindow = document.getElementById('chatWindow');
+        const input = document.getElementById('userInput');
+
+        // Setup Selection
+        document.querySelectorAll('.cat-item').forEach(item => {
+            item.onclick = () => {
+                document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
+                item.classList.add('active');
+                state.category = item.dataset.cat;
+            };
+        });
+
+        document.querySelectorAll('.diff-opt').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.diff-opt').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.difficulty = btn.dataset.lvl;
+            };
+        });
+
+        document.getElementById('launchBtn').onclick = () => {
+            prepareQuestions();
+            startSession();
+        };
+
+        function prepareQuestions() {
+            let internalPool = [];
+            if (state.category === 'mixed') {
+                Object.keys(questionBank).forEach(c => {
+                    internalPool = [...internalPool, ...questionBank[c][state.difficulty]];
+                });
+            } else {
+                internalPool = questionBank[state.category][state.difficulty] || [];
+            }
+
+            // Merge with External Bank
+            let externalPool = [];
+            if (state.category === 'mixed') {
+                Object.values(state.externalBank).forEach(list => {
+                    externalPool = [...externalPool, ...list];
+                });
+            } else {
+                externalPool = state.externalBank[state.category] || [];
+            }
+
+            // Combine and Shuffle
+            let combinedPool = [...internalPool, ...externalPool];
+            
+            // Remove exact duplicates by question text
+            const uniqueMap = new Map();
+            combinedPool.forEach(item => uniqueMap.set(item.q.toLowerCase(), item));
+            let finalPool = Array.from(uniqueMap.values());
+
+            // Fill to 10 with dummies if still low (unlikely with external import)
+            while(finalPool.length < 10) {
+                finalPool.push(getDummy(state.category, state.difficulty, finalPool.length));
+            }
+
+            state.questions = finalPool.sort(() => Math.random() - 0.5).slice(0, 10);
+        }
+
+        function startSession() {
+            setup.classList.add('hidden');
+            interview.style.display = 'grid';
+            
+            // Initial AI greeting
+            addMessage("ai", `Welcome! I'm Sarah. I'll be testing your ${state.category} knowledge at the ${state.difficulty} level. Let's start with 10 questions. Are you ready?`);
+            
+            setTimeout(() => {
+                askNext();
+            }, 1500);
+
+            startTimer();
+        }
+
+        function startTimer() {
+            state.interval = setInterval(() => {
+                state.timer--;
+                let m = Math.floor(state.timer / 60);
+                let s = state.timer % 60;
+                document.getElementById('clock').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if (state.timer <= 0) finalize();
+            }, 1000);
+        }
+
+        function askNext() {
+            if (state.currentIdx >= 10) return finalize();
+            
+            const qObj = state.questions[state.currentIdx];
+            addMessage("ai", qObj.q);
+            
+            // Update UI
+            document.getElementById('qCurrent').textContent = state.currentIdx + 1;
+            document.getElementById('progressFill').style.width = ((state.currentIdx + 1) / 10) * 100 + "%";
+        }
+
+        function addMessage(type, text) {
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.innerHTML = `<div class="bubble">${text}</div>`;
+            chatWindow.appendChild(div);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        document.getElementById('submitAnsBtn').onclick = handleSubmit;
+        input.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(); } };
+
+        function handleSubmit() {
+            const userAns = input.value.trim();
+            if (!userAns) return;
+
+            addMessage("user", userAns);
+            input.value = "";
+
+            // Evaluate
+            const currentQ = state.questions[state.currentIdx];
+            const result = evaluate(userAns, currentQ);
+            
+            state.history.push({
+                q: currentQ.q,
+                userAns: userAns,
+                refAns: currentQ.ans,
+                isCorrect: result.isCorrect,
+                score: result.score,
+                exp: currentQ.exp,
+                hinglish: currentQ.hinglish
+            });
+
+            // Update Live Stats
+            state.stats.acc = Math.round(state.history.reduce((a, b) => a + b.score, 0) / state.history.length);
+            state.stats.comm = Math.min(100, state.stats.comm + (userAns.length > 20 ? 15 : 5));
+            
+            document.getElementById('accPct').textContent = state.stats.acc + "%";
+            document.getElementById('accFill').style.width = state.stats.acc + "%";
+            document.getElementById('commPct').textContent = state.stats.comm + "%";
+            document.getElementById('commFill').style.width = state.stats.comm + "%";
+
+            state.currentIdx++;
+            
+            if (state.currentIdx < 10) {
+                setTimeout(askNext, 1200);
+            } else {
+                addMessage("ai", "That was our last question! Generating your performance analysis now...");
+                setTimeout(finalize, 2500);
+            }
+        }
+
+        function evaluate(ans, qObj) {
+            const words = ans.toLowerCase();
+            let matches = 0;
+            qObj.keywords.forEach(k => { if (words.includes(k.toLowerCase())) matches++; });
+            
+            const matchPct = (matches / qObj.keywords.length) * 100;
+            const score = Math.max(0, Math.min(100, matchPct + (ans.length > 50 ? 20 : 0)));
+            
+            return {
+                isCorrect: score > 50,
+                score: Math.round(score)
+            };
+        }
+
+        function finalize() {
+            clearInterval(state.interval);
+            interview.style.display = 'none';
+            results.style.display = 'block';
+
+            const correct = state.history.filter(h => h.isCorrect).length;
+            const final = Math.round(state.history.reduce((a, b) => a + b.score, 0) / 10);
+
+            document.getElementById('finalScore').textContent = final;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('wrongCount').textContent = 10 - correct;
+
+            renderReview();
+            renderFeedback();
+        }
+
+        function renderReview() {
+            const container = document.getElementById('reviewContainer');
+            container.innerHTML = "";
+
+            state.history.forEach((h, i) => {
+                const div = document.createElement('div');
+                div.className = "review-item";
+                div.innerHTML = `
+                    <div class="review-header-row">
+                        <strong>Q${i+1}: ${h.q}</strong>
+                        <span class="status-pill ${h.isCorrect ? 'status-correct' : 'status-wrong'}">
+                            ${h.isCorrect ? 'Correct' : 'Incorrect'}
+                        </span>
+                    </div>
+                    <div style="font-size: 0.9rem; margin-top:0.5rem">
+                        <span class="muted">Your Answer:</span> ${h.userAns}
+                    </div>
+                    <div class="explanation-box">
+                        <div style="font-weight:700; font-size:0.8rem; text-transform:uppercase; color:var(--brand-primary); margin-bottom:0.5rem">Explanation</div>
+                        <p style="margin:0">${h.exp}</p>
+                        <p class="hinglish-text"><strong>Hinglish:</strong> ${h.hinglish}</p>
+                        <div style="margin-top:0.75rem; font-size:0.85rem">
+                            <strong>Reference Answer:</strong> <span style="color:var(--success)">${h.refAns}</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderFeedback() {
+            const weak = document.getElementById('weakList');
+            const mast = document.getElementById('masterList');
+            
+            const categories = state.category === 'mixed' ? ['Manual', 'Automation', 'SQL', 'API'] : [state.category];
+            
+            weak.innerHTML = "<li>Answer structure (STAR method)</li><li>Technical keyword usage</li><li>Depth in " + state.difficulty + " level concepts</li>";
+            mast.innerHTML = "<li>Active recall of core definitions</li><li>Communication flow</li><li>Identifying critical edge cases</li>";
+        }
+
+        // Initialize components
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.renderHeader) renderHeader();
+            if (window.renderFooter) renderFooter();
+        });
+    </script>
+</body>
+
+</html>

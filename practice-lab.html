@@ -2,535 +2,1484 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Practice Lab - The Bug Sandbox | Technical Help Hub</title>
-  <meta name="description" content="Improve your QA skills in our interactive Bug Sandbox. Find hidden defects, log bugs, and master manual testing in a safe lab environment.">
-  
-  <!-- Theme Flash Protection -->
-  <script>
-    (function () {
-      const savedTheme = localStorage.getItem('theme') || 'light';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    })();
-  </script>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <script src="assets/js/components.js" defer></script>
-  <script src="assets/js/app.js" defer></script>
-  
-  <style>
-    .lab-hero {
-      padding: 4rem 0;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
-      text-align: center;
-      border-bottom: 1px solid var(--border-light);
-      position: relative;
-      overflow: hidden;
-    }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Practice Lab - Pro QA Playground | Technical Help Hub</title>
+    <meta name="description"
+        content="Master software testing with our interactive Practice Lab. Topic-wise quizzes, real-world bug hunting, and AI-driven mock preparation.">
 
-    .lab-hero img.hero-bg {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.1;
-      z-index: -1;
-    }
+    <!-- Theme Flash Protection -->
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 
-    .lab-grid {
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 2rem;
-      padding: 3rem 0;
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/components.js" defer></script>
+    <script src="assets/js/app.js" defer></script>
 
-    @media (max-width: 992px) {
-      .lab-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    <style>
+        :root {
+            --lab-primary: var(--brand-primary);
+            --lab-bg: var(--bg-surface);
+            --lab-accent: rgba(79, 70, 229, 0.1);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
 
-    /* ── Sandbox Item ── */
-    .sandbox-container {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-xl);
-      padding: 2.5rem;
-      box-shadow: var(--shadow-lg);
-      position: relative;
-    }
+        /* ── Layout & Hero ── */
+        .lab-hero {
+            padding: 5rem 0 3rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+        }
 
-    .sandbox-header {
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-light);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .stat-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
 
-    .bug-count-display {
-      background: var(--brand-primary);
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-full);
-      font-weight: 700;
-      font-size: 0.875rem;
-    }
+        .stat-pill {
+            background: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-light);
+        }
 
-    /* ── Buggy Login Form (INTERACTIVE BUGs) ── */
-    .buggy-form {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 2rem;
-      background: var(--bg-surface-alt);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-lg);
-      transition: all 0.3s ease;
-    }
+        /* ── Dashboad Grid ── */
+        .lab-main {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            padding: 3rem 0;
+            position: relative;
+            z-index: 10;
+        }
 
-    .buggy-form h2 {
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
+        .mobile-menu-btn {
+            display: none;
+            background: var(--lab-primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
 
-    .buggy-input-group {
-      margin-bottom: 1.25rem;
-    }
+        .mobile-close-btn {
+            display: none;
+        }
 
-    .buggy-input-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      font-size: 0.875rem;
-    }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 99998;
+        }
 
-    .buggy-input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-md);
-      background: var(--bg-surface);
-      color: var(--text-main);
-    }
+        .sidebar-overlay.active {
+            display: block;
+        }
 
-    /* Bug 1: Password field sometimes shows plain text (simulated with a toggle) */
-    .password-wrapper {
-      position: relative;
-    }
+        @media (max-width: 991px) {
+            .lab-main {
+                grid-template-columns: 1fr;
+                padding-top: 1rem;
+            }
 
-    /* Bug 2: Submit button jumps on hover */
-    .btn-buggy {
-      width: 100%;
-      padding: 0.875rem;
-      background: var(--brand-primary);
-      color: white;
-      border: none;
-      border-radius: var(--radius-md);
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.1s;
-    }
+            .mobile-menu-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
 
-    .btn-buggy:hover {
-      transform: translateX(10px) translateY(-5px); /* BUG: Jumping button */
-    }
+            .mobile-close-btn {
+                display: block;
+                border: none;
+                background: transparent;
+                font-size: 1.25rem;
+                cursor: pointer;
+                color: var(--text-muted);
+            }
 
-    /* ── Bug Reporter Sidebar ── */
-    .bug-reporter {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-xl);
-      padding: 1.5rem;
-      position: sticky;
-      top: 6rem;
-      height: fit-content;
-    }
+            .lab-sidebar {
+                position: fixed !important;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                width: 280px;
+                z-index: 99999;
+                background: white;
+                box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
+                transition: left 0.3s ease;
+                overflow-y: auto;
+                padding: 2rem 1rem;
+                display: flex;
+            }
 
-    .bug-list {
-      list-style: none;
-      padding: 0;
-      margin-top: 1rem;
-    }
+            .lab-sidebar.active {
+                left: 0;
+            }
+        }
 
-    .bug-item {
-      padding: 1rem;
-      border-bottom: 1px solid var(--border-light);
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+        /* ── Sidebar Nav ── */
+        .lab-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-    .bug-item:hover {
-      background: var(--bg-surface-alt);
-    }
+        .nav-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
 
-    .bug-item.found {
-      background: rgba(16, 185, 129, 0.1);
-      border-left: 4px solid #10b981;
-    }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
 
-    .bug-icon {
-      font-size: 1.25rem;
-    }
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
 
-    .bug-info h4 {
-      font-size: 0.9375rem;
-      margin-bottom: 0.25rem;
-    }
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
 
-    .bug-info p {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-      margin: 0;
-    }
+        .nav-item:hover {
+            background: var(--bg-surface-alt);
+            color: var(--lab-primary);
+        }
 
-    .found-badge {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      font-weight: 800;
-      color: #10b981;
-      display: none;
-    }
+        .nav-item.active {
+            background: var(--lab-primary);
+            color: white;
+        }
 
-    .bug-item.found .found-badge {
-      display: block;
-    }
+        /* ── Content Area ── */
+        .content-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            min-height: 500px;
+        }
 
-    /* ── Animations ── */
-    @keyframes glitch {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 2px); }
-      40% { transform: translate(-2px, -2px); }
-      60% { transform: translate(2px, 2px); }
-      80% { transform: translate(2px, -2px); }
-      100% { transform: translate(0); }
-    }
+        /* ── Quiz UI ── */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
 
-    .glitch-text {
-      animation: glitch 3s infinite;
-      display: inline-block;
-    }
-  </style>
+        .progress-container {
+            flex: 1;
+            max-width: 300px;
+            height: 8px;
+            background: var(--bg-surface-alt);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--lab-primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+        }
+
+        .question-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            padding: 1.25rem 1.5rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            background: var(--bg-surface);
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--lab-primary);
+            background: var(--lab-accent);
+        }
+
+        .option-btn.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .option-btn.wrong {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        /* ── Feedback System ── */
+        .feedback-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .feedback-box.correct {
+            background: #dcfce7;
+            border: 1px solid #bdf4d4;
+            color: #166534;
+        }
+
+        .feedback-box.wrong {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .explanation-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .exp-tab {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .exp-tab.active {
+            background: var(--lab-primary);
+            color: white;
+        }
+
+        /* ── Sandbox (Bug Hunting) ── */
+        .sandbox-ui {
+            background: var(--bg-surface-alt);
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            border: 2px dashed var(--border-light);
+        }
+
+        /* ── Animations ── */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ── Gamification ── */
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ── Voice UI ── */
+        .mic-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: var(--lab-primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .mic-btn.active {
+            background: var(--danger);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .content-card {
+                padding: 1.5rem;
+            }
+
+            .quiz-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .progress-container {
+                max-width: 100%;
+                width: 100%;
+                margin: 0;
+            }
+        }
+
+        [data-theme="dark"] .stat-pill {
+            background: var(--bg-surface);
+        }
+
+        [data-theme="dark"] .lab-sidebar {
+            background: var(--bg-surface) !important;
+        }
+
+        .drag-box {
+            width: 80px;
+            height: 80px;
+            background: var(--lab-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: grab;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .drop-zone {
+            width: 100%;
+            height: 100px;
+            border: 2px dashed var(--border-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .drop-zone.active {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .practice-iframe {
+            width: 100%;
+            height: 120px;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+        }
+
+        .scroll-container {
+            height: 120px;
+            overflow-y: scroll;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .scroll-content {
+            height: 500px;
+            background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+
+        .scroll-target {
+            padding: 10px;
+            background: var(--warning);
+            color: white;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .auto-practice-card .card-header {
+            background: var(--lab-accent);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .instruction-box {
+            background: #f1f5f9;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            border-left: 4px solid var(--lab-primary);
+            margin-bottom: 1rem;
+        }
+
+        .practice-arena {
+            padding: 1rem;
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .code-reveal {
+            display: none;
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            white-space: pre;
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 
 <body>
 
-  <header class="site-header"></header>
+    <header class="site-header"></header>
 
-  <section class="lab-hero">
-    <img src="assets/img/testing_lab_hero_1773658931018.png" alt="" class="hero-bg">
-    <div class="container" style="position: relative; z-index: 1;">
-      <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 1rem;">
-        Testing <span class="glitch-text" style="color: var(--brand-primary);">Lab</span> & Sandbox
-      </h1>
-      <p style="font-size: 1.25rem; max-width: 700px; margin: 0 auto; color: var(--text-muted);">
-        The only place where finding bugs is a victory. Test the application below and log all the defects you can find.
-      </p>
-    </div>
-  </section>
+    <section class="lab-hero">
+        <div class="container">
+            <h1 style="font-size: 3rem; font-weight: 900; letter-spacing: -0.05em; color: var(--text-main);">Practice
+                <span style="color:var(--lab-primary)">Lab 2.0</span>
+            </h1>
+            <p class="muted" style="max-width: 600px; margin: 0 auto;">Don't just learn, master. Solve real-world QA
+                problems, track your streak, and unlock expert badges.</p>
 
-  <main class="container">
-    <!-- Module Switcher -->
-    <div style="display:flex; justify-content:center; gap:1rem; margin-bottom: 2rem;">
-        <button class="btn btn-sm btn-primary module-btn" onclick="switchModule(1)">Level 1: Auth Module</button>
-        <button class="btn btn-sm btn-secondary module-btn" onclick="switchModule(2)">Level 2: Search Module</button>
-    </div>
-
-    <div class="lab-grid">
-      
-      <!-- ── Sandbox Column ── -->
-      <div class="sandbox-column">
-        <!-- Level 1: Auth (Existing) -->
-        <div class="sandbox-container" id="module-1">
-          <div class="sandbox-header">
-            <div>
-              <h2 style="margin:0">Level 1: User Authentication</h2>
-              <p class="muted" style="margin:0">Instructions: Try to login. Pay attention to fields, buttons, and error messages.</p>
+            <div class="stat-bar">
+                <div class="stat-pill"><i class="fas fa-fire" style="color:#f59e0b"></i> Streak: <span
+                        id="streakCount">0</span> Days</div>
+                <div class="stat-pill"><i class="fas fa-trophy" style="color:#fbbf24"></i> Points: <span
+                        id="pointsCount">0</span> XP</div>
+                <div class="stat-pill"><i class="fas fa-check-circle" style="color:var(--success)"></i> Accuracy: <span
+                        id="accuracyVal">0</span>%</div>
             </div>
-            <div class="bug-count-display">Bugs: <span id="foundCount1">0</span>/6</div>
-          </div>
-          <!-- Form content same as before -->
-          <div class="buggy-form" id="sandboxForm">
-            <h2>Sign In</h2>
-            <form onsubmit="return handleSandboxSubmit(event)">
-              <div class="buggy-input-group">
-                <label for="email">Email Address</label>
-                <input type="text" id="email" class="buggy-input" placeholder="Enter your email" required onclick="checkBug(4)">
-              </div>
-              <div class="buggy-input-group">
-                <label for="password">Password</label>
-                <div class="password-wrapper">
-                  <input type="password" id="password" class="buggy-input" placeholder="••••••••" required onclick="checkBug(2)">
+        </div>
+    </section>
+
+    <main class="container lab-main">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i> Practice Modules</button>
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <!-- Sidebar -->
+        <aside class="lab-sidebar" id="labSidebar">
+            <div class="nav-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h3 style="margin:0">🎯 Practice Modules</h3>
+                    <button class="mobile-close-btn" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
                 </div>
-              </div>
-              <div style="margin-bottom: 1.5rem; text-align: right;">
-                <a href="fgt-pass.html" style="font-size: 0.8125rem; color: var(--brand-primary);" onclick="return checkBug(5)">Forgot Password?</a>
-              </div>
-              <button type="submit" class="btn-buggy" onmouseover="checkBug(1)">Secure Login</button>
-            </form>
-            <div id="sandboxMsg" class="alert mt-4" style="display:none; padding: 1rem; border-radius: var(--radius-md);"></div>
-          </div>
-        </div>
-
-        <!-- Level 2: Search (New) -->
-        <div class="sandbox-container" id="module-2" style="display:none;">
-          <div class="sandbox-header">
-            <div>
-              <h2 style="margin:0">Level 2: Product Search & Filter</h2>
-              <p class="muted" style="margin:0">Instructions: Test the product grid and filters. Look for data mismatches and broken UI.</p>
+                <nav class="nav-list" id="moduleList">
+                    <div class="nav-item active" data-cat="manual"><i class="fas fa-vial"></i> Manual Testing</div>
+                    <div class="nav-item" data-cat="java"><i class="fab fa-java"></i> Java for Testers</div>
+                    <div class="nav-item" data-cat="automation"><i class="fas fa-robot"></i> Automation (Selenium)</div>
+                    <div class="nav-item" data-cat="automation-lab"><i class="fas fa-flask"></i> Automation Practice Lab
+                    </div>
+                    <div class="nav-item" data-cat="api"><i class="fas fa-network-wired"></i> API Testing</div>
+                    <div class="nav-item" data-cat="sql"><i class="fas fa-database"></i> SQL for Testers</div>
+                    <div class="nav-item" data-cat="ai"><i class="fas fa-brain"></i> AI Testing</div>
+                    <div class="nav-item" data-cat="sandbox"><i class="fas fa-bug"></i> Bug Sandbox</div>
+                </nav>
             </div>
-            <div class="bug-count-display">Bugs: <span id="foundCount2">0</span>/5</div>
-          </div>
 
-          <div style="background: var(--bg-surface-alt); padding: 1.5rem; border-radius: var(--radius-lg);">
-             <div style="display:flex; gap:10px; margin-bottom: 1.5rem;">
-                <input type="text" id="searchInput" class="buggy-input" placeholder="Search products (e.g., iPhone...)" oninput="handleSearchBug(this.value)">
-                <button class="btn btn-primary" onclick="checkBug(10)">Search</button>
-             </div>
+            <div class="nav-card">
+                <h3>⚡ Quick Modes</h3>
+                <nav class="nav-list">
+                    <div class="nav-item" onclick="startDailyChallenge()"><i class="fas fa-calendar-day" style="color:var(--brand-primary)"></i> Daily Challenge (2x XP)</div>
+                    <div class="nav-item" onclick="startRapidFire()"><i class="fas fa-bolt" style="color:#f59e0b"></i>
+                        Rapid Fire (60s)</div>
+                    <div class="nav-item" onclick="startRevision()"><i class="fas fa-bookmark"
+                            style="color:var(--lab-primary)"></i> Revision (Saved)</div>
+                </nav>
+            </div>
 
-             <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 1rem;" id="productGrid">
-                <!-- Products -->
-                <div class="card" style="padding: 1rem;" onclick="checkBug(7)">
-                    <div style="height: 100px; background: #ddd; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                    <h4 style="margin:0">Gaming Laptop</h4>
-                    <!-- Bug 7: Incorrect Price Formatting/Logic -->
-                    <p style="color: #059669; font-weight:700;">Price: $NaN</p>
+            <div class="nav-card" id="badgeCard">
+                <h3>🏅 Your Rank</h3>
+                <div style="text-align:center; padding: 1rem 0;">
+                    <div class="badge-icon">🥚</div>
+                    <div style="font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">Beginner</div>
+                    <small class="muted">150 XP to Pro</small>
                 </div>
-                <div class="card" style="padding: 1rem;">
-                    <div style="height: 100px; background: #ddd; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                    <h4 style="margin:0">Wireless Mouse</h4>
-                    <p style="color: #059669; font-weight:700;">Price: $25.00</p>
-                    <!-- Bug 8: Add to Cart button does nothing -->
-                    <button class="btn btn-sm btn-secondary" onclick="checkBug(8)">Add to Cart</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="content-area">
+            <div class="content-card" id="mainDisplay">
+
+                <!-- Default State: Level Selection -->
+                <div id="levelSelect">
+                    <h2 style="margin-bottom: 2rem;">Select Difficulty Level</h2>
+                    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <div class="card clickable" onclick="startQuiz('beginner')"
+                            style="padding:2rem; text-align:center;">
+                            <span style="font-size:2rem; display:block; margin-bottom:1rem;">🌱</span>
+                            <h3 style="margin:0">Beginner</h3>
+                            <p class="muted">Fundamentals & Concepts</p>
+                        </div>
+                        <div class="card clickable" onclick="startQuiz('intermediate')"
+                            style="padding:2rem; text-align:center;">
+                            <span style="font-size:2rem; display:block; margin-bottom:1rem;">🚀</span>
+                            <h3 style="margin:0">Intermediate</h3>
+                            <p class="muted">Scenarios & Logic</p>
+                        </div>
+                        <div class="card clickable" onclick="startQuiz('advanced')"
+                            style="padding:2rem; text-align:center;">
+                            <span style="font-size:2rem; display:block; margin-bottom:1rem;">🧙</span>
+                            <h3 style="margin:0">Advanced</h3>
+                            <p class="muted">Strategy & Coding</p>
+                        </div>
+                        <div class="card clickable" onclick="startInterviewDrill()"
+                             style="padding:2rem; text-align:center; border: 2px solid var(--brand-primary); background: rgba(99,102,241,0.05); grid-column: 1 / -1;">
+                            <span style="font-size:2rem; display:block; margin-bottom:1rem;">🏆</span>
+                            <h3 style="margin:0">Complete Interview Drill</h3>
+                            <p class="muted">50 Real-World Interview Questions (Mixed Difficulty)</p>
+                        </div>
+                    </div>
                 </div>
-                <!-- Bug 9: Duplicate Item -->
-                <div class="card" style="padding: 1rem;" onclick="checkBug(9)">
-                    <div style="height: 100px; background: #ddd; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                    <h4 style="margin:0">Wireless Mouse</h4>
-                    <p style="color: #059669; font-weight:700;">Price: $25.00</p>
+
+                <!-- Quiz Interface (Hidden by default) -->
+                <div id="quizInterface" style="display:none;">
+                    <div class="quiz-header">
+                        <span style="font-weight:700;">Question <span id="qCurrent">1</span>/<span
+                                id="qTotal">10</span></span>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                        <span class="timer" id="quizTimer">00:30</span>
+                    </div>
+
+                    <div class="question-box">
+                        <h2 id="qText">Loading question...</h2>
+                        <div class="options-grid" id="optionsGrid">
+                            <!-- Options injected here -->
+                        </div>
+                    </div>
+
+                    <div class="feedback-box" id="feedbackBox">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong id="feedbackText">Correct!</strong>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="btn btn-sm btn-outline" onclick="revealAnswer()" id="revealBtn">Show Answer</button>
+                                <button class="btn btn-sm btn-outline" id="saveBtn" onclick="toggleSave()"><i
+                                        class="far fa-bookmark"></i> Save</button>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem; font-size: 0.95rem;" id="explanationText">
+                            Explanation goes here.
+                        </div>
+                        <div class="explanation-tabs">
+                            <div class="exp-tab active" data-lang="en">English</div>
+                            <div class="exp-tab" data-lang="hi">Hinglish</div>
+                            <div class="exp-tab" data-lang="ex">Real Example</div>
+                        </div>
+                        <button class="btn btn-primary" style="margin-top: 2rem; width: 100%;" id="nextBtn"
+                            onclick="nextQuestion()">Next Question</button>
+                    </div>
+
+                    <button id="voiceBtn" class="mic-btn" title="Answer using voice">
+                        <i class="fas fa-microphone"></i>
+                    </button>
                 </div>
-             </div>
-          </div>
+
+                <!-- Results Interface (Hidden) -->
+                <div id="resultsScreen" style="display:none; text-align:center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 2rem;" id="resultEmoji">🎉</div>
+                    <h2 id="resultTitle">Session Complete!</h2>
+                    <div style="font-size: 3rem; font-weight: 800; color: var(--lab-primary); margin-bottom: 1rem;"
+                        id="resultScore">0/10</div>
+                    <p class="muted" id="resultMsg">Great job! You've earned 50 XP today.</p>
+
+                    <div id="weakAreas"
+                        style="margin: 2rem 0; text-align: left; background: var(--bg-surface-alt); padding: 1.5rem; border-radius: var(--radius-lg);">
+                        <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-line"></i> Areas to focus:</h4>
+                        <ul id="weakList" class="muted" style="padding-left: 1.5rem;">
+                            <li>SDLC Paradoxes</li>
+                            <li>API Status codes 4xx vs 5xx</li>
+                        </ul>
+                    </div>
+
+                    <div style="display:flex; gap:1rem; justify-content:center;">
+                        <button class="btn btn-primary" onclick="location.reload()">Back to Dashboard</button>
+                        <button class="btn btn-secondary" onclick="startRevision()">Review Mistakes</button>
+                    </div>
+                </div>
+
+                <!-- Automation Lab Section (New) -->
+                <div id="automationLab" style="display:none;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem;">
+                        <h2>Automation Practice Playground</h2>
+                        <div class="stat-pill" style="margin:0"><i class="fas fa-info-circle"></i> Practical Hub</div>
+                    </div>
+
+                    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+                        <!-- Login Module -->
+                        <div class="card auto-practice-card">
+                            <div class="card-header">
+                                <i class="fas fa-sign-in-alt"></i> Login Form Practice
+                            </div>
+                            <div class="card-body">
+                                <div class="instruction-box">Task: Enter credentials and perform login. Use ID locators.
+                                </div>
+                                <form class="practice-arena" onsubmit="event.preventDefault(); validateAction('login')">
+                                    <input type="text" id="auto_username" placeholder="Username (id='user')"
+                                        class="form-input" autocomplete="username">
+                                    <input type="password" id="auto_password" placeholder="Password (id='pass')"
+                                        class="form-input" autocomplete="current-password">
+                                    <button type="submit" class="btn btn-primary" style="width:100%"
+                                        id="auto_login_btn">Login (id='login')</button>
+                                </form>
+                                <div class="code-reveal" id="code_login"></div>
+                                <button class="btn btn-sm btn-outline" style="margin-top:10px"
+                                    onclick="showAutoCode('login')">Show Script</button>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown Module -->
+                        <div class="card auto-practice-card">
+                            <div class="card-header">
+                                <i class="fas fa-list-ul"></i> Dropdown Interaction
+                            </div>
+                            <div class="card-body">
+                                <div class="instruction-box">Task: Select 'Automation' from the dropdown using Select
+                                    class.</div>
+                                <div class="practice-arena">
+                                    <select id="auto_dropdown" class="form-input" onchange="validateAction('dropdown')">
+                                        <option value="">--- Choose Category ---</option>
+                                        <option value="manual">Manual Testing</option>
+                                        <option value="automation">Automation</option>
+                                        <option value="api">API Testing</option>
+                                    </select>
+                                </div>
+                                <div class="code-reveal" id="code_dropdown"></div>
+                                <button class="btn btn-sm btn-outline" style="margin-top:10px"
+                                    onclick="showAutoCode('dropdown')">Show Script</button>
+                            </div>
+                        </div>
+
+                        <!-- Scrolling Module -->
+                        <div class="card auto-practice-card">
+                            <div class="card-header">
+                                <i class="fas fa-mouse-pointer"></i> Scroll to Element
+                            </div>
+                            <div class="card-body">
+                                <div class="instruction-box">Task: Scroll down the container to find and click the
+                                    target button.</div>
+                                <div class="practice-arena">
+                                    <div class="scroll-container" onscroll="checkScroll(this)">
+                                        <div class="scroll-content">
+                                            <div class="scroll-target" id="auto_scroll_target"
+                                                onclick="validateAction('scroll')">Found Me!</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="code-reveal" id="code_scroll"></div>
+                                <button class="btn btn-sm btn-outline" style="margin-top:10px"
+                                    onclick="showAutoCode('scroll')">Show Script</button>
+                            </div>
+                        </div>
+
+                        <!-- Checkbox Module -->
+                        <div class="card auto-practice-card">
+                            <div class="card-header">
+                                <i class="fas fa-check-square"></i> Checkboxes & Radio
+                            </div>
+                            <div class="card-body">
+                                <div class="instruction-box">Task: Click both checkboxes to verify selection logic.
+                                </div>
+                                <div class="practice-arena">
+                                    <label><input type="checkbox" class="cb-group"
+                                            onchange="validateAction('checkbox')"> Accept Terms</label><br>
+                                    <label><input type="checkbox" class="cb-group"
+                                            onchange="validateAction('checkbox')"> Newsletter</label>
+                                </div>
+                                <div class="code-reveal" id="code_checkbox"></div>
+                                <button class="btn btn-sm btn-outline" style="margin-top:10px"
+                                    onclick="showAutoCode('checkbox')">Show Script</button>
+                            </div>
+                        </div>
+
+                        <!-- Drag and Drop Module -->
+                        <div class="card auto-practice-card">
+                            <div class="card-header">
+                                <i class="fas fa-arrows-alt"></i> Drag & Drop
+                            </div>
+                            <div class="card-body">
+                                <div class="instruction-box">Task: Drag the box into the target zone using Actions
+                                    class.</div>
+                                <div class="practice-arena" style="display:flex; gap:1rem; align-items:center;">
+                                    <div class="drag-box" draggable="true" id="dragSource"
+                                        ondragstart="event.dataTransfer.setData('text', event.target.id)">SOURCE</div>
+                                    <div class="drop-zone" id="dropTarget" ondragover="event.preventDefault()"
+                                        ondrop="validateAction('dragdrop', event)">DROP HERE</div>
+                                </div>
+                                <div class="code-reveal" id="code_dragdrop"></div>
+                                <button class="btn btn-sm btn-outline" style="margin-top:10px"
+                                    onclick="showAutoCode('dragdrop')">Show Script</button>
+                            </div>
+                        </div>
+
+                        <!-- Iframe Module -->
+                        <div class="card auto-practice-card">
+                            <div class="card-header">
+                                <i class="fas fa-window-maximize"></i> Iframe (Nested Frame)
+                            </div>
+                            <div class="card-body">
+                                <div class="instruction-box">Task: Switch to iframe first, then click the button inside.
+                                </div>
+                                <div class="practice-arena">
+                                    <iframe
+                                        srcdoc="<html><body style='font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:80px; margin:0;'><button id='frameBtn' style='padding:8px 16px; cursor:pointer;'>Click Me Inside Frame</button><script>document.getElementById('frameBtn').onclick = () => window.parent.validateAction('iframe')</script></body></html>"
+                                        class="practice-iframe"></iframe>
+                                </div>
+                                <div class="code-reveal" id="code_iframe"></div>
+                                <button class="btn btn-sm btn-outline" style="margin-top:10px"
+                                    onclick="showAutoCode('iframe')">Show Script</button>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Interactions Module -->
+                        <div class="card auto-practice-card">
+                            <div class="card-header">
+                                <i class="fas fa-hand-pointer"></i> Advanced Interactions
+                            </div>
+                            <div class="card-body">
+                                <div class="instruction-box">Task: Interact with date, radio, and mouse actions.</div>
+                                <div class="practice-arena">
+                                    <div style="margin-bottom: 0.5rem">
+                                        <input type="date" class="form-input" id="auto_date"
+                                            onchange="validateAction('extra')">
+                                    </div>
+                                    <div style="margin-bottom: 0.5rem">
+                                        <label style="margin-right: 1rem;"><input type="radio" name="auto_radio"
+                                                onchange="validateAction('extra')"> Option A</label>
+                                        <label><input type="radio" name="auto_radio" onchange="validateAction('extra')">
+                                            Option B</label>
+                                    </div>
+                                    <div style="display:flex; gap: 0.5rem; margin-top: 1rem;">
+                                        <button type="button" class="btn btn-secondary btn-sm" style="flex:1"
+                                            ondblclick="validateAction('extra')">Double Click</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" style="flex:1"
+                                            oncontextmenu="event.preventDefault(); validateAction('extra')">Right
+                                            Click</button>
+                                    </div>
+                                </div>
+                                <div class="code-reveal" id="code_extra"></div>
+                                <button class="btn btn-sm btn-outline" style="margin-top:10px"
+                                    onclick="showAutoCode('extra')">Show Script</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
-
-      <!-- ── Bug Report Column ── -->
-      <aside class="bug-reporter">
-        <h3 style="display:flex; align-items:center; gap:0.5rem">
-          <span>📝</span> <span id="logTitle">Level 1 Bug Log</span>
-        </h3>
-        <p class="muted" style="font-size: 0.8125rem;">Found a bug? Click it in the sandbox to log it here.</p>
-        
-        <!-- Level 1 Logs -->
-        <div class="bug-list" id="bugReportLog1">
-          <div class="bug-item" id="bug-1">
-            <div class="bug-icon">🖱️</div>
-            <div class="bug-info">
-              <h4>UI: Jumping Login Button</h4>
-              <p>The login button moves unexpectedly when hovered.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-          <!-- ... rest of level 1 items ... -->
-          <div class="bug-item" id="bug-2">
-            <div class="bug-icon">👁️</div>
-            <div class="bug-info">
-              <h4>Security: Password Leak</h4>
-              <p>Password characters are briefly visible or insecure.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-          <div class="bug-item" id="bug-3">
-            <div class="bug-icon">🔑</div>
-            <div class="bug-info">
-              <h4>Validation: Weak Auth</h4>
-              <p>System accepts weak "admin" credentials.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-          <div class="bug-item" id="bug-4">
-            <div class="bug-icon">📏</div>
-            <div class="bug-info">
-              <h4>UI: Layout Overflow</h4>
-              <p>Long input strings break the component layout.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-          <div class="bug-item" id="bug-5">
-            <div class="bug-icon">🔗</div>
-            <div class="bug-info">
-              <h4>Link: Broken Redirect</h4>
-              <p>"Forgot Password" leads to a non-existent page.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-          <div class="bug-item" id="bug-6">
-            <div class="bug-icon">🆘</div>
-            <div class="bug-info">
-              <h4>UX: Info Leakage</h4>
-              <p>Error messages provide too much info to attackers.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
         </div>
+    </main>
 
-        <!-- Level 2 Logs -->
-        <div class="bug-list" id="bugReportLog2" style="display:none;">
-          <div class="bug-item" id="bug-7">
-            <div class="bug-icon">🔢</div>
-            <div class="bug-info">
-              <h4>Data: Price Calculation</h4>
-              <p>Price field displays "NaN" instead of amount.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-          <div class="bug-item" id="bug-8">
-            <div class="bug-icon">🚫</div>
-            <div class="bug-info">
-              <h4>Function: Dead Button</h4>
-              <p>"Add to Cart" button has no event handler.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-          <div class="bug-item" id="bug-9">
-            <div class="bug-icon">👯</div>
-            <div class="bug-info">
-              <h4>Content: Duplicate Entry</h4>
-              <p>Product list contains duplicate items (Mouse).</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-          <div class="bug-item" id="bug-10">
-            <div class="bug-icon">🔎</div>
-            <div class="bug-info">
-              <h4>Logic: Search Failure</h4>
-              <p>Search button doesn't filter the actual list results.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-          <div class="bug-item" id="bug-11">
-            <div class="bug-icon">💥</div>
-            <div class="bug-info">
-              <h4>UI: Search Glitch</h4>
-              <p>Typing 'SQL' in search causes a simulated UI crash.</p>
-              <span class="found-badge">Log Success</span>
-            </div>
-          </div>
-        </div>
+    <footer class="site-footer"></footer>
 
-        <div id="completionMsg" class="alert ok mt-4" style="display:none; font-size: 0.875rem;">
-          <strong>🎉 Lab Pro!</strong> You found all the bugs in this module. Ready for more?
-        </div>
-      </aside>
+    <script>
+        // ── DATA: Real Interview Questions ──
+        const LAB_DATA = {
+            manual: {
+                beginner: [
+                    { q: "What is the primary goal of Software Testing?", options: ["To prove the system is bug-free", "To find defects and improve quality", "To write code", "To design the UI"], correct: 1, en: "Testing aims to identify defects so they can be fixed before release.", hi: "Testing ka main maksad defects dhoondna aur quality badhana hai.", ex: "Finding a login bug before users do." },
+                    { q: "What is the difference between Severity and Priority?", options: ["Severity is impact; Priority is urgency", "Severity is urgency; Priority is impact", "They are the same", "Severity is for devs; Priority for QA"], correct: 0, en: "Severity is technical impact; Priority is business urgency.", hi: "Severity system par impact hai, Priority kaam ki urgency.", ex: "A misspelling on home page (Low Severity, High Priority)." },
+                    { q: "What does SDLC stand for?", options: ["Software Development Life Cycle", "System Design Life Cycle", "Standard Development Logic", "Software Deployment Link"], correct: 0, en: "SDLC is the process used by the industry to design and test software.", hi: "SDLC software banane aur test karne ka ek standard process hai.", ex: "Planning, Coding, Testing, Deployment." },
+                    { q: "What is Smoke Testing?", options: ["Testing under fire", "Basic health check of a new build", "Testing for performance", "Deep regression"], correct: 1, en: "Smoke test verifies if critical features are working in a new build.", hi: "Smoke testing build ki basic stability check karne ke liye hoti hai.", ex: "Checking if the app launches correctly." },
+                    { q: "What is Black Box Testing?", options: ["Testing with source code", "Testing UI only", "Testing functionality without code access", "Testing database only"], correct: 2, en: "Testing based on requirements without knowing internal code.", hi: "Bina code dekhe sirf functionality check karna Black Box testing hai.", ex: "Testing login with valid credentials." },
+                    { q: "Define STLC.", options: ["System Testing Logic", "Software Testing Life Cycle", "Software Technical Link", "Standard Test Logic"], correct: 1, en: "STLC defines the phases of testing from requirement to closure.", hi: "STLC testing ke har phase ko logically define karta hai.", ex: "Requirement Analysis -> Test Planning -> Execution." },
+                    { q: "What is a Bug Leakage?", options: ["Bug found by testers", "Bug found by users in production", "Code error", "Missing requirement"], correct: 1, en: "A bug missed by QA and found by end-users in live environment.", hi: "Agar QA bug miss kar de aur user ko production mein mile.", ex: "User reporting a crash on official site." },
+                    { q: "What is White Box Testing?", options: ["UI Testing", "Database Testing", "Testing with knowledge of internal code", "Manual Testing only"], correct: 2, en: "Testing internal structures or workings of an application.", hi: "Jab tester ko internal code ki knowledge ho (Unit testing).", ex: "Checking if-else loops in a function." },
+                    { q: "What is the difference between Alpha and Beta testing?", options: ["Alpha is for users; Beta for devs", "Alpha is internal; Beta is external (UAT)", "No difference", "Alpha is automated"], correct: 1, en: "Alpha is done in-house; Beta is done by real users in real environment.", hi: "Alpha company ke andar hota hai, Beta real users ke saath.", ex: "Beta release of a mobile game." },
+                    { q: "What is Regression Testing?", options: ["Testing new features", "Retesting to ensure old features aren't broken", "Deleting old tests", "Speed testing"], correct: 1, en: "Ensures new changes didn't affect existing functionality.", hi: "Naye badlav ke baad purani cheezein check karna ki kahin wo toh nahi toot gayin.", ex: "Checking 'Cart' works after adding 'Coupon' feature." },
+                    { q: "Define Retesting.", options: ["Testing for side effects", "Retesting a specific fixed bug", "Running all tests again", "Manual testing"], correct: 1, en: "Retesting verifies if a specific bug reported earlier is now fixed.", hi: "Jo bug report kiya tha, uske fix hone ke baad dobara check karna.", ex: "Tester re-verifying Bug ID 101." },
+                    { q: "What is Static Testing?", options: ["Running code", "Reviews, inspections, and walkthroughs", "Database testing", "Performance testing"], correct: 1, en: "Testing without executing the code (Verification).", hi: "Bina app chalaye requirements aur code review karna.", ex: "Reading Requirement Docs to find gaps." },
+                    { q: "What is Positive Testing?", options: ["Testing with invalid data", "Testing with valid data to check expected flow", "Testing with focus", "Automatic testing"], correct: 1, en: "Testing with inputs that are expected to work correctly.", hi: "Sahi data daal kar check karna ki system kaam kar raha hai.", ex: "Logging in with correct username/password." },
+                    { q: "What is Negative Testing?", options: ["Testing with valid data", "Testing with invalid data to check error handling", "Testing with bias", "Testing for speed"], correct: 1, en: "Testing with incorrect inputs to ensure the system handles errors.", hi: "Galat data daal kar check karna ki error message aata hai ya nahi.", ex: "Entering 'abc' in a Moble Number field." },
+                    { q: "What is the primary goal of UAT?", options: ["To find bugs", "To check code quality", "To confirm the system meets user needs", "To automate tests"], correct: 2, en: "User Acceptance Testing ensures the tool is fit for business use.", hi: "UAT check karta hai ki product client ki requirements poori karta hai.", ex: "Client testing the app before final handover." },
+                    { q: "What is Monkey Testing?", options: ["Testing with monkeys", "Randomly providing inputs to crash the system", "Testing animal apps", "Systematic testing"], correct: 1, en: "Randomly entering data to check system robustness.", hi: "Bina kisi plan ke random data daal kar system ki majbooti check karna.", ex: "Repeatedly clicking buttons to see if it hangs." },
+                    { q: "Define Gray Box Testing.", options: ["Testing UI only", "Combination of Black box and White box", "Testing while colors are grey", "Hardware testing"], correct: 1, en: "Tester has partial knowledge of internal structures (e.g., DB schema).", hi: "Black aur White box ka mishran; isme thodi internal knowledge hoti hai.", ex: "Checking database entries after submitting a form." },
+                    { q: "What is Ad-hoc Testing?", options: ["Planned testing", "Unplanned/informal testing without docs", "Automation testing", "Final testing"], correct: 1, en: "Informal testing performed without any documentation or plan.", hi: "Bina kisi document ya planning ke randomly test karna.", ex: "Trying random features on a lunch break." },
+                    { q: "Localization (L10n) vs Internationalization (I18n)?", options: ["Same", "I18n is design; L10n is adapting to a specific region", "L10n is design; I18n is adapting", "Reporting vs Fixing"], correct: 1, en: "I18n makes the app capable of global use; L10n adapts it for a specific locale.", hi: "I18n matlab app ko global banana, L10n matlab kisi khas area/language ke liye dhaalna.", ex: "Adding Hindi language support (Localization)." }
 
-    </div>
-  </main>
+                ],
+                intermediate: [
+                    { q: "What is Boundary Value Analysis (BVA)?", options: ["Testing middle values", "Testing at edges of input ranges", "Testing random values", "Testing large data"], correct: 1, en: "Testing values at the boundaries of equivalence classes (e.g., 0, 1, 100).", hi: "Inputs ki boundaries (kinaron) pe test karna (like -1, 0, 1).", ex: "If age is 1-100, test 0, 1, 100, 101." },
+                    { q: "What is Equivalence Partitioning?", options: ["Dividing data into equal sizes", "Grouping inputs into classes that behave similarly", "Math testing", "Testing every value"], correct: 1, en: "Dividing input data into classes where one value represents the class.", hi: "Inputs ko groups mein baantna jo same result dein.", ex: "Testing one value (e.g., 25) for age group 18-60." },
+                    { q: "What is an RTM (Requirement Traceability Matrix)?", options: ["Code file", "Matrix mapping requirements to test cases", "Bug report", "Test Plan"], correct: 1, en: "Ensures every requirement has at least one associated test case.", hi: "Requirement ko Test Case ke saath map karna taaki kuch miss na ho.", ex: "Requirement 1.0 is covered by TC_01." },
+                    { q: "What is the difference between Verification and Validation?", options: ["No difference", "Verification checks process; Validation checks product", "Both check code", "Verification is for users"], correct: 1, en: "Verification (Process) vs Validation (Final Product).", hi: "Verification: Kya hum sahi bana rahe hain? Validation: Kya humne sahi banaya?", ex: "Reviewing code vs Running the app." },
+                    { q: "What is a 'Defect' vs a 'Failure'?", options: ["Same thing", "Defect is in code; Failure is observed behavior", "Failure is in code; Defect is observed", "Bug in docs"], correct: 1, en: "A defect in code leads to a failure in the environment.", hi: "Code ki galti Defect hai, aur jab app chalne mein galti kare toh Failure.", ex: "A syntax error causing a crash." },
+                    { q: "What is Sanity Testing?", options: ["Full regression", "Testing specific functionality after bug fix/changes", "Testing with logic", "Initial health check"], correct: 1, en: "A subset of regression focusing on specific component changes.", hi: "Bugs fix hone ke baad kuch khas features ki health check karna.", ex: "Checking Payment module after a small update." },
+                    { q: "What is Exploratory Testing?", options: ["Planned testing", "Simultaneous learning, design, and execution", "Travel testing", "Automated testing"], correct: 1, en: "Testing on the fly based on experience and intuition.", hi: "Bina fixed steps ke apni samajh se app ko explore aur test karna.", ex: "Tester randomly trying scenarios to find complex bugs." },
+                    { q: "Define Test Scenario vs Test Case.", options: ["Same", "Scenario is 'What to test'; Case is 'How to test'", "Case is 'What'; Scenario is 'How'", "Case is for devs"], correct: 1, en: "Scenario is high-level; Test Case is detailed with steps.", hi: "Scenario matlab kya test karna hai, Case matlab kaise (steps).", ex: "Scenario: Forget Password; Case: Enter email, click link..." },
+                    { q: "What is the Pesticide Paradox?", options: ["Too many bugs", "Same tests won't find new bugs after a while", "Bug spray testing", "Tests killing code"], correct: 1, en: "Tests lose effectiveness over time and need regular updates.", hi: "Ek hi tests baar-baar chalane se naye bugs nahi milte.", ex: "Updating the regression suite every sprint." },
+                    { q: "What is the difference between Error, Bug, and Defect?", options: ["Same", "Error (Human); Bug (Observed); Defect (Confirmed technical flaw)", "Bug is bigger", "No industry standard"], correct: 1, en: "Error is human mistake; Bug is found by users/QA; Defect is the technical flaw.", hi: "Error insani galti hai, Bug QA ne pakda, Defect code ki khami hai.", ex: "Typo in code leads to a Bug in UI." },
+                    { q: "What is a 'Critical' bug?", options: ["Small UI issue", "Feature not working; no workaround", "Spelling error", "Slow performance"], correct: 1, en: "A major functionality is blocked and there is no alternative.", hi: "Jab koi main feature bilkul kaam na kare aur koi rasta na ho.", ex: "Sign-up button not doing anything." },
+                    { q: "What is 'End-to-End' Testing?", options: ["Testing code end", "Testing complete flow from start to finish", "Testing only DB", "Unit testing"], correct: 1, en: "Verifies the entire system flow including external integrations.", hi: "Shuru se ant tak pura process test karna.", ex: "Login -> Search -> Add to Cart -> Payment -> Invoice." },
+                    { q: "Name a non-functional testing type.", options: ["Unit Testing", "Performance Testing", "Regression Testing", "Smoke Testing"], correct: 1, en: "Checks how the system works (Speed, Load, Security).", hi: "Jo features ke bajaye quality/speed check kare (like load testing).", ex: "Checking if site loads in 2 seconds." },
+                    { q: "What is 'Defect Density'?", options: ["Weight of a bug", "Number of defects per size of module (KLOC)", "Number of testers", "Code speed"], correct: 1, en: "Helps identify which modules are the weakest/most problematic.", hi: "Ye batata hai ki code ke size ke hisab se kitne bugs hain.", ex: "Module A has 10 bugs per 1000 lines of code." }
 
-  <footer class="site-footer"></footer>
+                ],
+                advanced: [
+                    { q: "What is the V-Model in Testing?", options: ["Visual Model", "Development and Testing activities performed in parallel", "Vertical Model", "Victory Model"], correct: 1, en: "Assocaites every development phase with a corresponding test phase.", hi: "Har development step ke saath ek testing step parallel chalta hai.", ex: "Requirement analysis matches Acceptance testing." },
+                    { q: "Explain Risk-Based Testing.", options: ["Testing risky code only", "Prioritizing tests based on probability and impact of failure", "Testing insurance apps", "Manual testing"], correct: 1, en: "Focusing core efforts on features most likely to fail or cause damage.", hi: "Zahan zyada risk hai, wahan pehle aur zyada testing karna.", ex: "Testing Payment gateway before About Us page." },
+                    { q: "What is Decision Table Testing?", options: ["Testing table UI", "Capturing complex business logic in a matrix", "Testing SQL", "Manual testing"], correct: 1, en: "Using combinations of inputs (Rules) to verify complex behaviors.", hi: "Alag-alag conditions ke results ko matrix format mein test karna.", ex: "Testing login with 2FA, Remember Me, etc." },
+                    { q: "What is Mutation Testing?", options: ["Testing code changes", "Modifying code slightly to check if tests catch it", "Testing virus apps", "AI testing"], correct: 1, en: "Changes (mutants) are made to source code to verify test case quality.", hi: "Code mein jaan-bujh kar galti karna dekhne ke liye ki tests use pakadte hain ya nahi.", ex: "Changing a '+' to '-' in code to see if tests fail." },
+                    { q: "Difference between Static Analysis and Code Review?", options: ["Same", "Static is automated tool; Review is human/manual", "Review is tool", "Static is only for Java"], correct: 1, en: "Static analysis uses tools (like SonarQube); Reviews are manual peer checks.", hi: "Static Analysis tools karte hain, Code Review log (Peer Review).", ex: "SonarQube vs Github Pull Request review." },
+                    { q: "What is Bottom-Up vs Top-Down Integration?", options: ["Same", "Top starts from main; Bottom starts from units", "Bottom is faster", "Manual vs Automation"], correct: 1, en: "Approaches to combine units and test them as a group.", hi: "Components ko jodte waqt pehle bade modular level pe test karna ya chhote units se.", ex: "Testing drivers vs stubs." },
+                    { q: "What is Agile Methodology?", options: ["Water model", "Iterative and incremental development", "Fast coding", "No documentation"], correct: 1, en: "Focuses on flexibility, collaboration, and rapid delivery (Sprints).", hi: "Chhote-chhote hisson mein kaam divide karke jaldi deliver karna.", ex: "2-week SCRUM sprint." },
+                    { q: "What is a 'User Story'?", options: ["Story about user", "A small unit of work expressed from user perspective", "Bug report", "Marketing doc"], correct: 1, en: "Format: As a [user], I want [action], so that [value].", hi: "Ek feature ki requirement jo user ke nazariye se likhi ho.", ex: "'As a shopper, I want a Search bar so I can find products'." },
+                    { q: "What is a 'Blocker' bug?", options: ["UI glitch", "Stops all further testing in that module", "Small bug", "Slow site"], correct: 1, en: "Highest priority bug that prevents any further progress.", hi: "Aisa bug jo aage ki testing hi rok de.", ex: "App crashing immediately after login." }
 
-  <script>
-    let foundBugs = new Set();
-    const totalBugsLevel1 = 6;
-    const totalBugsLevel2 = 5;
-    let currentModule = 1;
+                ]
+            },
+            automation: {
+                beginner: [
+                    { q: "What is Selenium WebDriver?", options: ["A browser", "API to automate browsers", "Testing framework", "Language"], correct: 1, en: "WebDriver drives a browser natively for automation.", hi: "Selenium WebDriver browser ko automatically chalane ka ek tool hai.", ex: "driver.get('url');" },
+                    { q: "Which locator is generally preferred for performance?", options: ["XPath", "CSS Selector", "ID", "Class Name"], correct: 2, en: "ID is uniquely indexed and fast.", hi: "ID sabse fast hota hai kyunki browser furan dhoond leta hai.", ex: "driver.findElement(By.id('login'));" },
+                    { q: "XPath vs CSS Selector - true statement?", options: ["XPath is faster", "CSS can move backwards to parent", "XPath can move backwards; CSS cannot", "No difference"], correct: 2, en: "XPath allows bidirectional navigation (axis), CSS only moves downward.", hi: "XPath se hum parent pe ja sakte hain, CSS se nahi.", ex: "//td/parent::tr" },
+                    { q: "How to handle an Alert in Selenium?", options: ["driver.alert()", "driver.switchTo().alert()", "js.alert()", "Keyboard escape"], correct: 1, en: "Use switchTo() to handle browser-level popups.", hi: "Browser popups handle karne ke liye focus switch karna padta hai.", ex: "driver.switchTo().alert().accept();" },
+                    { q: "Which command opens a URL in Selenium?", options: ["driver.open()", "driver.get()", "driver.goto()", "driver.url()"], correct: 1, en: "driver.get() is the standard command to navigate to a page.", hi: "get() command se website open hoti hai.", ex: "driver.get('https://google.com');" },
+                    { q: "Implicit Wait vs Explicit Wait?", options: ["Implicit is better", "Implicit is global; Explicit is for specific condition", "No difference", "Explicit is for Chrome"], correct: 1, en: "Implicit is set once; Explicit waits for specific things like visibility.", hi: "Implicit poore browser ke liye, Explicit sirf ek khas condition ke liye.", ex: "Wait until element is 'clickable'." },
+                    { q: "How to find multiple elements in Selenium?", options: ["findElement", "findElements", "findMany", "getElements"], correct: 1, en: "findElements returns a List of matching elements.", hi: "findElements ek se zyada items dhoondhne ke liye hota hai.", ex: "List<WebElement> links = driver.findElements(By.tagName('a'));" },
+                    { q: "What is the purpose of Actions class?", options: ["Action movies", "Handling mouse and keyboard gestures", "Setting variables", "Database actions"], correct: 1, en: "Used for complex gestures like drag and drop, hover, etc.", hi: "Mouse hover ya drag-drop ke liye Actions class use hoti hai.", ex: "actions.moveToElement(el).perform();" },
+                    { q: "How to refresh a page in Selenium?", options: ["driver.refresh()", "driver.navigate().refresh()", "driver.reload()", "Send F5"], correct: 1, en: "navigate().refresh() is the standard way to reload a page.", hi: "Page reload karne ke liye navigate().refresh() use karte hain.", ex: "driver.navigate().refresh();" },
+                    { q: "What is TestNG?", options: ["Automation tool", "Testing framework based on JUnit", "Reporting tool only", "Mocking tool"], correct: 1, en: "A powerful framework for annotations, parallel execution, and assertions.", hi: "TestNG testing organize aur manage karne ka framework hai.", ex: "@Test annotation." },
+                    { q: "Difference between driver.close() and driver.quit()?", options: ["Same", "Close current window vs Close entire session", "Quit is faster", "Close deletes cookies"], correct: 1, en: "quit() is safer as it releases all memory and processes.", hi: "Close sirf ek window band karta hai, Quit pura browser session.", ex: "Use quit() in @AfterSuite." },
+                    { q: "How to handle browser-based popups (Windows)?", options: ["Alert class", "GetWindowHandles is used to switch", "Robot class", "JavascriptExecutor"], correct: 1, en: "Selenium treats tabs/windows as 'handles'.", hi: "Alag-alag windows ke Handles lo aur switch() use karo.", ex: "driver.switchTo().window(childID);" },
+                    { q: "What are Selenium 4 Relative Locators?", options: ["XPath only", "above(), below(), near() etc.", "Coordinates", "CSS only"], correct: 1, en: "Finding elements relative to others nearby which is more human-friendly.", hi: "Kisi item ke upar, neeche ya paas wali cheez dhoondna.", ex: "with(By.tagName('p')).above(element)" },
+                    { q: "How to find if an element is displayed?", options: ["isExists()", "isDisplayed()", "isVisible()", "isActive()"], correct: 1, en: "Checks if the element is visible in the UI and present in DOM.", hi: "UI mein dikh raha hai ya nahi ye check karne ke liye.", ex: "boolean status = element.isDisplayed();" }
 
-    function switchModule(moduleNum) {
-        currentModule = moduleNum;
-        
-        // UI Switching
-        document.getElementById('module-1').style.display = moduleNum === 1 ? 'block' : 'none';
-        document.getElementById('module-2').style.display = moduleNum === 2 ? 'block' : 'none';
-        document.getElementById('bugReportLog1').style.display = moduleNum === 1 ? 'block' : 'none';
-        document.getElementById('bugReportLog2').style.display = moduleNum === 2 ? 'block' : 'none';
-        document.getElementById('logTitle').textContent = `Level ${moduleNum} Bug Log`;
-        
-        // Button Styles
-        const btns = document.querySelectorAll('.module-btn');
-        btns[0].className = moduleNum === 1 ? 'btn btn-sm btn-primary module-btn' : 'btn btn-sm btn-secondary module-btn';
-        btns[1].className = moduleNum === 2 ? 'btn btn-sm btn-primary module-btn' : 'btn btn-sm btn-secondary module-btn';
-        
-        updateCounter();
-    }
+                ],
+                intermediate: [
+                    { q: "What is Page Object Model (POM)?", options: ["A coding language", "Design pattern to separate UI elements from logic", "Reporting library", "Automation tool"], correct: 1, en: "Creates an object repository for UI elements to increase reusability.", hi: "Code saaf rakhne ke liye components aur logic ko alag karna.", ex: "LoginPage.java class." },
+                    { q: "How to handle Dynamic Web Tables?", options: ["Use static XPath", "Retrieve row count and loop through columns dynamically", "Take a screenshot", "Ignore the table"], correct: 1, en: "Calculate size of rows/cols and use loop to find target text.", hi: "Loop chala kar aur dynamic XPaths bana kar data dhoondna.", ex: "//tr[i]/td[j]" },
+                    { q: "What is JavascriptExecutor used for?", options: ["Writing Java", "Interacting with elements Selenium can't click/scroll", "Database testing", "Security"], correct: 1, en: "Executes JS code directly in the browser to handle tricky UI actions.", hi: "Jab Selenium click na kar paye toh browser ka dimaag (JS) use karna.", ex: "js.executeScript('window.scrollBy(0,500)');" },
+                    { q: "How to take a Screenshot in Selenium?", options: ["driver.snap()", "TakesScreenshot interface", "driver.getPhoto()", "Print Screen key"], correct: 1, en: "Cast driver to TakesScreenshot and call getScreenshotAs method.", hi: "Driver ko TakesScreenshot mein convert karke save karna.", ex: "((TakesScreenshot)driver).getScreenshotAs(...);" },
+                    { q: "Relative vs Absolute XPath - which is better?", options: ["Absolute (starts from root)", "Relative (starts from anywhere/attributes)", "Both equal", "Absolute for performance"], correct: 1, en: "Relative is stable; Absolute breaks easily if the UI changes.", hi: "Relative XPath behtar hai kyunki UI badalne par bhi kaam karta hai.", ex: "//input[@id='user'] vs /html/body/div[1]/input" },
+                    { q: "What is Page Factory?", options: ["Factory for cars", "Extension of POM with @FindBy annotation", "Jenkins plugin", "Mocking tool"], correct: 1, en: "Initializes web elements lazily with initElements.", hi: "POM ko aur advanced banane wala tool jisme @FindBy use hota hai.", ex: "@FindBy(id='login') WebElement btn;" },
+                    { q: "How to switch to a Frame in Selenium?", options: ["driver.frame()", "driver.switchTo().frame()", "driver.focus()", "frame.accept()"], correct: 1, en: "Use switchTo().frame() using index, name, or element.", hi: "Frame (khidki ke andar khidki) mein switch karne ke liye.", ex: "driver.switchTo().frame('iframe_name');" },
+                    { q: "What is Data-Driven Framework?", options: ["Testing only data", "Running same script with multiple data inputs (Excel/CSV)", "Speed testing", "Manual testing with data"], correct: 1, en: "Separates test scripts from test data for scalability.", hi: "Script ek rahega par data Excel ya database se aayega.", ex: "Using @DataProvider in TestNG." },
+                    { q: "How to handle multiple browser windows?", options: ["driver.switchTo().window(handle)", "driver.nextWindow()", "driver.newTab()", "Alert skip"], correct: 0, en: "Use getWindowHandles() and iterate to the target handle.", hi: "getWindowHandles() se saari ids lo aur fir switch karo.", ex: "driver.switchTo().window(childID);" },
+                    { q: "What are Listeners in TestNG?", options: ["People watching you", "Interfaces that listen to test events (Success/Failure)", "Audio testing", "Logs only"], correct: 1, en: "Allows custom behavior on test start, success, or failure.", hi: "Tests ke events track karne wale tools (like Fail hone pe screenshot lena).", ex: "ITestListener interface." },
+                    { q: "What is the @DataProvider annotation?", options: ["Fetching from DB", "Feeding multiple datasets into a single test", "Report generation", "Initializing driver"], correct: 1, en: "Enables data-driven testing by returning a 2D object array.", hi: "Ek hi test ko alag-alag data sets ke saath chalane ke liye.", ex: "@DataProvider(name='user-data')" },
+                    { q: "Soft Assert vs Hard Assert?", options: ["Soft is faster", "Hard stops execution; Soft continues and reports at end", "Hard is for UI", "Soft is for DB"], correct: 1, en: "Soft assert is useful for multiple validations in one test.", hi: "Hard assert fail hone pe test rok deta hai, Soft assert aage badhta hai.", ex: "SoftAssert sa = new SoftAssert();" },
+                    { q: "What is an Interceptor/Listener in Selenium?", options: ["Tracking events", "Listening to logs", "Intercepting driver commands", "Reporting"], correct: 2, en: "WebDriverEventListener can listen to driver actions like click/navigate.", hi: "Driver ki har harkat (like click) par nazar rakhne ke liye.", ex: "EventFiringWebDriver." },
+                    { q: "How to simulate 'Enter' key in Selenium?", options: ["pressEnter()", "sendKeys(Keys.ENTER)", "typeEnter()", "js.click()"], correct: 1, en: "Keys class provides keyboard interactions.", hi: "Keys.ENTER use karke enter dabaya ja sakta hai.", ex: "element.sendKeys(Keys.ENTER);" }
 
-    function checkBug(id) {
-      if (id === 5) {
-        if(event) event.preventDefault();
-      }
+                ],
+                advanced: [
+                    { q: "What is the Singleton Design Pattern in frameworks?", options: ["One file only", "Ensures only one instance of WebDriver exists", "Single test case", "Manual pattern"], correct: 1, en: "Prevents multiple browser instances, saving memory and complexity.", hi: "Pure project mein browser ka ek hi connection (instance) banana.", ex: "private static WebDriver instance;" },
+                    { q: "How to automate Shadow DOM elements?", options: ["Standard XPath", "Standard CSS", "Using JavascriptExecutor to access shadowRoot", "Implicit Wait"], correct: 2, en: "Standard locators cannot enter shadow roots; need JS path.", hi: "Shadow DOM ko direct nahi pakda ja sakta, JS path chahiye.", ex: "wrapper.shadowRoot.querySelector(...)" },
+                    { q: "Selenium Grid purpose?", options: ["Drawing grids", "Parallel execution across different machines/browsers", "Database testing", "Code layout"], correct: 1, en: "Hub and Node architecture for distributed testing.", hi: "Alag-alag systems pe parallel tests chalane ke liye.", ex: "Running Chrome on Mac and Firefox on Windows at once." },
+                    { q: "What is Headless Testing?", options: ["Testing without brain", "Running tests without a visible browser GUI", "Command line only", "Testing API only"], correct: 1, en: "Faster execution, useful for CI/CD pipelines.", hi: "Bina browser dikhe (background mein) tests chalana.", ex: "options.addArguments('--headless');" },
+                    { q: "Difference between quit() and close() in Selenium?", options: ["Same", "Close shuts window; Quit shuts entire driver session", "Quit is faster", "Close deletes cookies"], correct: 1, en: "close() closes current window; quit() destroys driver instance.", hi: "Close sirf ek tab band karta hai, Quit pura browser udha deta hai.", ex: "driver.quit() is better for teardown." },
+                    { q: "What is a 'Fluent Wait'?", options: ["Faster wait", "Wait with polling interval and ignoring exceptions", "Wait for animations", "Implicit wait"], correct: 1, en: "More customizable than Explicit wait (defines frequency of checks).", hi: "Explicit wait ka advanced version jisme 'wait interval' set kar sakte hain.", ex: "wait.pollingEvery(Duration.ofSeconds(2))" },
+                    { q: "How to handle SVG elements in XPath?", options: ["Standard XPath", "name()='svg'", "Using text()", "CSS only"], correct: 1, en: "SVG elements need name() or local-name() syntax in XPath.", hi: "SVG tags ke liye special XPath syntax lagta hai.", ex: "//*[name()='svg']" },
+                    { q: "How to run tests in Parallel in TestNG?", options: ["@Parallel", "parallel='tests' in testing.xml", "Using for-loops", "Jenkins only"], correct: 1, en: "Achieved via the 'parallel' attribute in the Suite/Test XML tag.", hi: "testing.xml mein parallel attribute on karke.", ex: "<suite name='s1' parallel='methods'>" },
+                    { q: "What is 'ThreadLocal' in frameworks?", options: ["Running local threads", "Ensures thread safety for WebDriver instances in parallel", "Local variables", "Reporting"], correct: 1, en: "Prevents different tests from overwriting each other's driver session.", hi: "Parallel execution mein har test ka apna alag driver instance safe rakhna.", ex: "private ThreadLocal<WebDriver> dr = new ThreadLocal<>();" }
 
-      if (foundBugs.has(id)) return;
-      
-      foundBugs.add(id);
-      const bugItem = document.getElementById(`bug-${id}`);
-      if (bugItem) {
-        bugItem.classList.add('found');
-      }
-      
-      updateCounter();
-    }
+                ]
+            },
+            api: {
+                beginner: [
+                    { q: "What is an API?", options: ["A browser", "A contract between two systems to talk", "A database", "A language"], correct: 1, en: "Application Programming Interface for communication.", hi: "Do applications ke beech baat-cheet ka ek zariya.", ex: "Weather API giving data to an app." },
+                    { q: "HTTP Status 201 meaning?", options: ["OK", "Created", "Accepted", "No Content"], correct: 1, en: "Indicates that a new resource was successfully created.", hi: "Naya data create hone pe 201 success milta hai.", ex: "After a successful POST request." }
+                ],
+                intermediate: [
+                    { q: "GET vs POST?", options: ["POST is faster", "GET sends data in URL; POST in body", "No difference", "POST for fetching only"], correct: 1, en: "GET is for retrieval; POST is for sending data/creation.", hi: "GET URL mein data bhejta hai, POST body mein.", ex: "Search query (GET) vs Login (POST)." }
+                ],
+                advanced: [
+                    { q: "What is OAuth 2.0?", options: ["Social network", "Authentication framework", "DB design", "API format"], correct: 1, en: "Industry-standard protocol for authorization.", hi: "Security ke liye password ki jagah Token use karne ka standard.", ex: "'Log in with Facebook' on a website." }
+                ]
+            },
+            sql: {
+                beginner: [
+                    { q: "Which command removes data permanently (no rollback)?", options: ["DELETE", "TRUNCATE", "DROP", "CLEAR"], correct: 1, en: "TRUNCATE is DDL and doesn't support easy rollback.", hi: "TRUNCATE furan pura table khali karta hai bina log ke.", ex: "Truncate table logs;" }
+                ]
+            },
+            ai: {
+                beginner: [
+                    { q: "What is Visual AI Testing?", options: ["UI testing", "AI that compares snapshots for pixel-level UI changes", "Looking at the screen", "AI color test"], correct: 1, en: "Identifies layout shifts and visual bugs humans might miss.", hi: "AI screen ko dekh kar design aur pixel badlav pakadta hai.", ex: "Applitools visual testing." }
+                ]
+            }
+        };
 
-    function handleSearchBug(val) {
-        if (val.toUpperCase().includes('SQL')) {
-            checkBug(11);
-            alert("⚠️ SYSTEM ERROR: SQL Injection pattern detected. Page stack overflow simulation triggered.");
-            document.getElementById('module-2').style.opacity = "0.5";
-            setTimeout(() => document.getElementById('module-2').style.opacity = "1", 1000);
+        // ── LOGIC: State Management ──
+        const QUIZ_SIZE = 10;
+        let state = {
+            cat: 'manual',
+            level: 'beginner',
+            mode: 'standard', // 'standard', 'rapid', 'daily'
+            questions: [],
+            qIndex: 0,
+            score: 0,
+            xp: 0,
+            timer: null,
+            timeLeft: 30,
+            streak: 0,
+            saved: [],
+            weakAreas: []
+        };
+
+        // Load streak/xp from LocalStorage
+        function loadUserData() {
+            const data = JSON.parse(localStorage.getItem('thh_lab_stats') || '{}');
+            state.xp = data.xp || 0;
+            state.streak = data.streak || 0;
+            state.saved = data.saved || [];
+            updateUIStats();
         }
-    }
 
-    function updateCounter() {
-      const count1 = Array.from(foundBugs).filter(id => id <= 6).length;
-      const count2 = Array.from(foundBugs).filter(id => id > 6).length;
-      
-      if (document.getElementById('foundCount1')) document.getElementById('foundCount1').textContent = count1;
-      if (document.getElementById('foundCount2')) document.getElementById('foundCount2').textContent = count2;
+        function updateUIStats() {
+            document.getElementById('pointsCount').textContent = state.xp;
+            document.getElementById('streakCount').textContent = state.streak;
+            // Rank update
+            const badgeCard = document.getElementById('badgeCard');
+            if (state.xp > 500) {
+                badgeCard.querySelector('.badge-icon').textContent = '🦉';
+                badgeCard.querySelector('div:nth-child(2)').textContent = 'Expert';
+                badgeCard.querySelector('small').textContent = 'Top 1% of Students';
+            } else if (state.xp > 150) {
+                badgeCard.querySelector('.badge-icon').textContent = '🦁';
+                badgeCard.querySelector('div:nth-child(2)').textContent = 'Pro';
+                badgeCard.querySelector('small').textContent = (500 - state.xp) + ' XP to Expert';
+            }
+        }
 
-      const currentTotal = currentModule === 1 ? totalBugsLevel1 : totalBugsLevel2;
-      const currentFound = currentModule === 1 ? count1 : count2;
+        // ── LOGIC: Navigation ──
+        function toggleSidebar() {
+            const sidebar = document.getElementById('labSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar && overlay) {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+        }
 
-      document.getElementById('completionMsg').style.display = currentFound === currentTotal ? 'block' : 'none';
-    }
+        document.querySelectorAll('.nav-item[data-cat]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                btn.classList.add('active');
+                state.cat = btn.dataset.cat;
+                resetDisplay();
+                if (window.innerWidth < 992) toggleSidebar();
+            });
+        });
 
-    function handleSandboxSubmit(e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const pass = document.getElementById('password').value;
-      const msg = document.getElementById('sandboxMsg');
+        function resetDisplay() {
+            document.getElementById('levelSelect').style.display = state.cat === 'automation-lab' ? 'none' : 'block';
+            document.getElementById('quizInterface').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('automationLab').style.display = state.cat === 'automation-lab' ? 'block' : 'none';
 
-      msg.style.display = 'block';
-      msg.className = 'alert mt-4';
+            if (state.cat === 'sandbox') {
+                alert('Bug Sandbox is currently under construction. Please check back later!');
+                document.getElementById('levelSelect').style.display = 'none';
+                document.getElementById('automationLab').style.display = 'none';
+            }
+        }
 
-      if (email === 'admin' && pass === 'admin') {
-        checkBug(3);
-        msg.className = "alert ok mt-4";
-        msg.innerHTML = "<strong>Bug Found!</strong> Successfully logged in with insecure 'admin/admin' credentials.";
-        msg.style.background = "rgba(16,185,129,0.1)";
-        msg.style.color = "#10b981";
-      } else {
-        checkBug(6);
-        msg.className = "alert error mt-4";
-        msg.innerHTML = "<strong>Error:</strong> User with password '" + pass + "' not found. (Info Leakage!)";
-        msg.style.background = "rgba(239, 68, 68, 0.1)";
-        msg.style.color = "#dc2626";
-      }
-    }
+        function validateAction(type, event) {
+            let success = false;
+            if (type === 'login') {
+                const u = document.getElementById('auto_username').value;
+                const p = document.getElementById('auto_password').value;
+                if (u && p) success = true;
+            } else if (type === 'dropdown') {
+                if (document.getElementById('auto_dropdown').value === 'automation') success = true;
+            } else if (type === 'checkbox') {
+                const checked = document.querySelectorAll('.cb-group:checked').length;
+                if (checked === 2) success = true;
+            } else if (type === 'dragdrop') {
+                event.preventDefault();
+                const zone = document.getElementById('dropTarget');
+                zone.classList.add('active');
+                zone.textContent = "DROPPED!";
+                success = true;
+            } else if (type === 'iframe' || type === 'scroll' || type === 'extra') {
+                success = true;
+            }
 
-    // Auto-check for layout overflow
-    document.getElementById('email').addEventListener('input', function(e) {
-      if (this.value.length > 30) {
-        checkBug(4);
-      }
-    });
-  </script>
+            if (success) {
+                alert("✅ Automation Task Validated! XP +10");
+                state.xp += 10;
+                updateUIStats();
+                syncData();
+            }
+        }
+
+        function checkScroll(el) {
+            // Just as visual feedback
+            const target = document.getElementById('auto_scroll_target');
+            const rect = target.getBoundingClientRect();
+            const containerRect = el.getBoundingClientRect();
+            if (rect.top < containerRect.bottom) {
+                target.style.background = '#10b981';
+            }
+        }
+
+        function showAutoCode(type) {
+            const codes = {
+                login: `// Java + Selenium\nWebElement user = driver.findElement(By.id("user"));\nuser.sendKeys("admin");\ndriver.findElement(By.id("pass")).sendKeys("1234");\ndriver.findElement(By.id("login")).click();`,
+                dropdown: `// Python + Selenium\nfrom selenium.webdriver.support.ui import Select\nselect = Select(driver.find_element(By.ID, "auto_dropdown"))\nselect.select_by_value("automation")`,
+                checkbox: `// Java\nList<WebElement> boxes = driver.findElements(By.className("cb-group"));\nfor(WebElement box : boxes) {\n   if(!box.isSelected()) box.click();\n}`,
+                dragdrop: `// Java - Actions Class\nWebElement src = driver.findElement(By.id("dragSource"));\nWebElement target = driver.findElement(By.id("dropTarget"));\nActions act = new Actions(driver);\nact.dragAndDrop(src, target).perform();`,
+                iframe: `// Java - Switch Command\ndriver.switchTo().frame(0); // By Index\ndriver.findElement(By.id("frameBtn")).click();\ndriver.switchTo().defaultContent(); // Switch Back`,
+                scroll: `// Java - JavaScript Executor\nWebElement element = driver.findElement(By.id("auto_scroll_target"));\n((JavascriptExecutor) driver).executeScript(\n   "arguments[0].scrollIntoView(true);", element\n);\nelement.click();`,
+                extra: `// Java\ndriver.findElement(By.id("auto_date")).sendKeys("11/25/2026");\nActions act = new Actions(driver);\nact.doubleClick(btn1).contextClick(btn2).perform();`
+            };
+            const el = document.getElementById('code_' + type);
+            el.textContent = codes[type];
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // ── LOGIC: Quiz Flow ──
+        function startQuiz(level) {
+            state.level = level;
+            state.qIndex = 0;
+            state.score = 0;
+            state.weakAreas = [];
+
+            const sourceArray = (LAB_DATA[state.cat] && LAB_DATA[state.cat][level]) || [];
+            
+            if (sourceArray.length === 0) {
+                alert("More questions coming soon for this level! Try Manual - Beginner.");
+                return;
+            }
+
+            // Shuffle and pick 50 (as per requirement)
+            const shuffled = [...sourceArray].sort(() => Math.random() - 0.5);
+            state.questions = shuffled.slice(0, 50);
+
+            document.getElementById('levelSelect').style.display = 'none';
+            document.getElementById('quizInterface').style.display = 'block';
+            
+            showQuestion();
+            console.log(`Quiz started: ${state.cat} - ${level}. Questions: ${state.questions.length}`);
+        }
+
+        function startInterviewDrill() {
+            state.level = 'interview';
+            state.qIndex = 0;
+            state.score = 0;
+            state.weakAreas = [];
+
+            // Combine all levels for the current category
+            const pool = LAB_DATA[state.cat];
+            let sourceArray = [];
+            if (pool) {
+                Object.values(pool).forEach(list => sourceArray = [...sourceArray, ...list]);
+            }
+
+            if (sourceArray.length === 0) {
+                alert("Interview Drill data missing for this category.");
+                return;
+            }
+
+            // Shuffle and pick 50
+            const shuffled = [...sourceArray].sort(() => Math.random() - 0.5);
+            state.questions = shuffled.slice(0, 50);
+
+            document.getElementById('levelSelect').style.display = 'none';
+            document.getElementById('quizInterface').style.display = 'block';
+            
+            showQuestion();
+            console.log(`Interview Drill started: ${state.cat}. Total Questions: ${state.questions.length}`);
+        }
+
+        function revealAnswer() {
+            const qData = state.questions[state.qIndex];
+            const btns = document.querySelectorAll('.option-btn');
+            
+            btns.forEach((b, i) => {
+                b.disabled = true;
+                if (i === qData.correct) {
+                    b.classList.add('correct');
+                }
+            });
+
+            clearInterval(state.timer);
+            document.getElementById('feedbackBox').style.display = 'block';
+            document.getElementById('feedbackText').textContent = "Answer Revealed";
+            document.getElementById('feedbackText').style.color = "var(--lab-primary)";
+            showExpl('en');
+        }
+
+        function showQuestion() {
+            // 2. Correct Total Question Count (Dynamic)
+            const qData = state.questions[state.qIndex];
+            const total = state.questions.length;
+
+            console.log("Index:", state.qIndex, "Total:", total);
+
+            // 9. UI Sync Fix
+            document.getElementById('qCurrent').textContent = state.qIndex + 1;
+            document.getElementById('qTotal').textContent = total;
+            document.getElementById('progressBar').style.width = ((state.qIndex + 1) / total * 100) + '%';
+            document.getElementById('qText').textContent = qData.q;
+            document.getElementById('feedbackBox').style.display = 'none';
+
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
+
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span>${opt}</span><i class="far fa-circle"></i>`;
+                btn.onclick = () => handleAnswer(idx);
+                grid.appendChild(btn);
+            });
+
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(state.timer);
+            state.timeLeft = state.mode === 'rapid' ? 10 : 30; // 10s for rapid fire
+            const display = document.getElementById('quizTimer');
+            display.textContent = '00:' + (state.timeLeft < 10 ? '0' : '') + state.timeLeft;
+
+            state.timer = setInterval(() => {
+                state.timeLeft--;
+                display.textContent = '00:' + (state.timeLeft < 10 ? '0' : '') + state.timeLeft;
+                if (state.timeLeft <= 0) {
+                    clearInterval(state.timer);
+                    if (state.mode === 'rapid') {
+                        showResults(); // Rapid fire ends on first timeout
+                    } else {
+                        handleAnswer(-1); // Standard timeout
+                    }
+                }
+            }, 1000);
+        }
+
+        function handleAnswer(idx) {
+            clearInterval(state.timer);
+            const qData = state.questions[state.qIndex];
+            const btns = document.querySelectorAll('.option-btn');
+
+            btns.forEach(b => b.disabled = true);
+
+            const feedback = document.getElementById('feedbackBox');
+            feedback.style.display = 'block';
+            feedback.className = 'feedback-box ' + (idx === qData.correct ? 'correct' : 'wrong');
+
+            document.getElementById('feedbackText').textContent = idx === qData.correct ? '🎯 Correct!' : '❌ Incorrect';
+            showExpl('en');
+
+            if (idx === qData.correct) {
+                state.score++;
+                state.xp += (state.mode === 'rapid' ? 20 : 10); // Bonus XP for Rapid Fire
+                btns[idx].classList.add('correct');
+                btns[idx].querySelector('i').className = 'fas fa-check-circle';
+            } else {
+                if (idx !== -1) btns[idx].classList.add('wrong');
+                btns[qData.correct].classList.add('correct');
+                state.weakAreas.push(qData.q.split(' ').slice(0, 3).join(' '));
+
+                if (state.mode === 'rapid') {
+                    setTimeout(() => {
+                        alert("GAME OVER! You missed one. Final Score: " + state.score);
+                        showResults();
+                    }, 1500);
+                    return;
+                }
+            }
+
+            updateUIStats();
+            syncData();
+        }
+
+        function showExpl(lang) {
+            const qData = state.questions[state.qIndex];
+            const text = document.getElementById('explanationText');
+            text.textContent = qData[lang];
+
+            document.querySelectorAll('.exp-tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.lang === lang);
+                t.onclick = () => showExpl(t.dataset.lang);
+            });
+        }
+
+        function nextQuestion() {
+            const total = state.questions.length;
+            
+            if (state.qIndex < total - 1) {
+                state.qIndex++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizInterface').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+
+            const total = state.questions.length;
+            document.getElementById('resultScore').textContent = `${state.score}/${total}`;
+
+            const accuracy = total > 0 ? Math.round((state.score / total) * 100) : 0;
+            document.getElementById('accuracyVal').textContent = accuracy;
+
+            // Weak areas logic
+            const weakList = document.getElementById('weakList');
+            weakList.innerHTML = '';
+            if (state.weakAreas.length > 0) {
+                state.weakAreas.forEach(area => {
+                    const li = document.createElement('li');
+                    li.textContent = area + "...";
+                    weakList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = "No weak areas found! You are a Pro.";
+                weakList.appendChild(li);
+            }
+
+            // Streak check
+            state.streak++;
+            updateUIStats();
+            syncData();
+        }
+
+        // ── UTILS: Personalization ──
+        function toggleSave() {
+            const qData = state.questions[state.qIndex];
+            const btn = document.getElementById('saveBtn');
+            const isSaved = state.saved.some(s => s.q === qData.q);
+
+            if (isSaved) {
+                state.saved = state.saved.filter(s => s.q !== qData.q);
+                btn.innerHTML = '<i class="far fa-bookmark"></i> Save';
+            } else {
+                state.saved.push(qData);
+                btn.innerHTML = '<i class="fas fa-bookmark"></i> Saved';
+            }
+            syncData();
+        }
+
+        function syncData() {
+            localStorage.setItem('thh_lab_stats', JSON.stringify({
+                xp: state.xp,
+                streak: state.streak,
+                saved: state.saved
+            }));
+        }
+
+        // ── VOICE UI (Simulation) ──
+        const voiceBtn = document.getElementById('voiceBtn');
+        if (voiceBtn) {
+            voiceBtn.onclick = () => {
+                voiceBtn.classList.toggle('active');
+                if (voiceBtn.classList.contains('active')) {
+                    alert("Speech recognition starting... (Demo: Say 'Option 1')");
+                    setTimeout(() => {
+                        alert("Heard: 'Option 1'");
+                        handleAnswer(0);
+                        voiceBtn.classList.remove('active');
+                    }, 2000);
+                }
+            };
+        }
+
+        // Startup
+        window.onload = () => {
+            loadUserData();
+            injectDailyChallenge();
+        };
+
+        function startRapidFire() {
+            state.mode = 'rapid';
+            state.cat = 'manual'; // Default to manual for rapid fire
+            state.level = 'beginner';
+            state.score = 0;
+            state.qIndex = 0;
+            state.weakAreas = [];
+
+            const source = LAB_DATA['manual']['beginner'] || [];
+            const shuffled = [...source].sort(() => Math.random() - 0.5);
+            state.questions = shuffled.slice(0, 10);
+
+            console.log("Rapid Fire Started - Total:", state.questions.length);
+
+            document.getElementById('levelSelect').style.display = 'none';
+            document.getElementById('quizInterface').style.display = 'block';
+            document.getElementById('quizTimer').style.background = 'rgba(245, 158, 11, 0.2)';
+            alert("⚡ RAPID FIRE MODE: You have 10 seconds per question. One wrong answer or timeout and it's GAME OVER!");
+            showQuestion();
+        }
+
+        function startRevision() {
+            if (state.saved.length === 0) {
+                alert("No saved questions yet! Save questions during a quiz to review them here.");
+                return;
+            }
+            state.mode = 'standard';
+            state.cat = 'revision';
+            state.score = 0;
+            state.qIndex = 0;
+            state.weakAreas = [];
+
+            // 1. Snapshot sources
+            const source = [...state.saved];
+            state.questions = source.sort(() => Math.random() - 0.5);
+
+            document.getElementById('levelSelect').style.display = 'none';
+            document.getElementById('quizInterface').style.display = 'block';
+            showQuestion();
+        }
+
+        function startDailyChallenge() {
+            const challenge = {
+                q: "DAILY CHALLENGE: Which testing ensures the system handles peak loads?",
+                options: ["Smoke Testing", "Sanity Testing", "Load Testing", "Unit Testing"],
+                correct: 2,
+                en: "Load Testing checks system behavior under high traffic.",
+                hi: "Load testing check karta hai ki system zyada traffic jhel sakta hai ya nahi.",
+                ex: "Testing an E-commerce site during a 'Big Billion Day' sale."
+            };
+
+            state.mode = 'daily';
+            state.cat = 'manual';
+            state.level = 'beginner';
+            state.score = 0;
+            state.qIndex = 0;
+            state.questions = [challenge]; // Only 1 question for daily
+            
+            console.log("Daily Challenge Started");
+
+            document.getElementById('levelSelect').style.display = 'none';
+            document.getElementById('quizInterface').style.display = 'block';
+            showQuestion();
+        }
+
+        async function injectDailyChallenge() {
+            const today = new Date().toDateString();
+            const lastDate = localStorage.getItem('thh_daily_date');
+
+            if (today !== lastDate) {
+                console.log("New day detected: Daily Challenge refreshed.");
+                localStorage.setItem('thh_daily_date', today);
+            }
+        }
+
+    </script>
 </body>
 
 </html>

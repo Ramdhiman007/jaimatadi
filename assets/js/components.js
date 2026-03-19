@@ -64,8 +64,11 @@ const Components = {
             <div class="container footer-inner">
                 <p>© <span id="year-comp"></span> Technical Help Hub</p>
                 <div class="footer-links">
+                    <a href="about.html">About Us</a>
                     <a href="privacy.html">Privacy Policy</a>
+                    <a href="disclaimer.html">Disclaimer</a>
                     <a href="terms.html">Terms of Service</a>
+                    <a href="contact.html">Contact Us</a>
                     <a href="admin.html">Admin</a>
                 </div>
             </div>
